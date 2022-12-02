@@ -1,4 +1,5 @@
 .park
+.vscode
 
 # Output and C++ files
 *.o
