@@ -26,7 +26,6 @@ struct Map{
     bool is_open(int a, int b);
     bool is_unknown(int a, int b);
     double get_cost(int a, int b);
-    
 };
 
 
