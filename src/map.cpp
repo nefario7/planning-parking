@@ -31,12 +31,46 @@ void Map::create_map(std::string file_name){
     // std::cout<<"map: "<<map.size()<<std::endl;
 }
 
+bool Map::is_obstacle(int a, int b){
+    this->map = map;
+    if (map[a][b] == 1){
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+bool Map::is_open(int a, int b){
+    this->map = map;
+    if (map[a][b] == 0){
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+bool Map::is_unknown(int a, int b){
+    this->map = map;
+    if (map[a][b] == -1){
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+double Map::get_cost(int a, int b){
+    this->map = map;
+    return map[a][b];
+};
 
 // int main(){
 //     Map map;
-//     map.create_map("../scripts/base_map.csv");
+//     map.create_map("../scripts/mit_base_map.csv");
 //     std::cout<<"Map: "<<map.map.size()<<std::endl;
-//     // parseCSV();
+//     // map.is_obstacle(1,1);
 
 //     return 0;
 // }

@@ -22,6 +22,12 @@ struct Environment {
 struct Map{
     std::vector<std::vector<int>>map;
     void create_map(std::string filename);
+    bool is_obstacle(int a, int b); 
+    bool is_open(int a, int b);
+    bool is_unknown(int a, int b);
+    double get_cost(int a, int b);
+    
 };
+
 
 // ---------------------------------------
