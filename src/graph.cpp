@@ -17,6 +17,6 @@ double Node::get_f() const {
 }
 
 void Graph::add_node(int idx, Point p, double g, double h, int parent_idx = -1, int primitive_idx = -1) {
-    nodes_map.insert(make_pair(idx, Node(p, g, h, parent_idx, primitive_idx)));
+    OPEN.insert(make_pair(idx, Node(p, g, h, parent_idx, primitive_idx)));
     return;
 }

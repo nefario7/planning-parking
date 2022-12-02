@@ -13,14 +13,70 @@ Planner::Planner(vector<vector<int>> map_data, unordered_map<double, vector<Prim
     map.map = map_data;
 }
 
-void Planner::search() {
-
+bool Planner::isClosed(const int s_idx) {
+    if (graph.CLOSED.find(s_idx) == graph.CLOSED.end()) {
+        return false;
+    }
+    return true;
 }
 
-double Planner::get_g(int idx) {
-    auto got = graph.nodes_map.find(idx);
+int Planner::getFScoreIdx() {
+    OPENLIST_F OP_F = graph.OPEN_F.top();
+    graph.OPEN_F.pop();
+    return OP_F.i;
+}
 
-    if (got == graph.nodes_map.end()) {
+void Planner::insertClosed(const int s_idx) {
+    graph.CLOSED.insert(s_idx);
+}
+
+void Planner::search() {
+    // FIX THIS
+    int start_x, start_y;
+    double start_theta;
+    int goal_idx;
+
+    Point p = {start_x, start_y, start_theta};
+    int init_idx = get_index(p.x, p.y, p.theta);
+    double h = get_heuristic(p.x, p.y, p.theta);
+    double g = get_g(init_idx);
+    graph.add_node(init_idx, p, g, h, -1, -1);
+
+    while(!isClosed(goal_idx) && !graph.OPEN_F.empty())
+    {
+        int curr_idx = getFScoreIdx();
+
+        int curr_x, curr_y;
+        double curr_theta;
+        getXYZFromIdx(curr_idx, curr_x, curr_y, curr_theta);
+
+        if (isClosed(curr_idx))
+        {
+            continue;
+        }
+
+        insertClosed(curr_idx);
+
+        expand_node(curr_idx);
+    }
+
+    printf("\n");
+    if (isClosed(goal_idx))
+    {
+        printf("Found a plan \n");
+    }
+    else
+    {
+        printf("No plan found \n");
+    }
+    return;
+}
+
+
+double Planner::get_g(int idx) {
+    auto got = graph.OPEN.find(idx);
+
+    if (got == graph.OPEN.end()) {
         return FLT_MAX;
     }
 
@@ -38,15 +94,20 @@ int Planner::get_index(int x, int y, double theta) {
     return x * y * theta;
 }
 
+void Planner::getXYZFromIdx(int idx, int &x, int &y, double &theta) {
+    // FIX THIS
+    return;
+}
+
 int Planner::get_heuristic(int x, int y, double theta) {
     // FIX THIS
     return 0;
 }
 
 void Planner::expand_node(int idx) {
-    int x = graph.nodes_map[idx].p.x;
-    int y = graph.nodes_map[idx].p.y;
-    double theta = graph.nodes_map[idx].p.theta;
+    int x = graph.OPEN[idx].p.x;
+    int y = graph.OPEN[idx].p.y;
+    double theta = graph.OPEN[idx].p.theta;
 
     auto got = primitives_map.find(theta);
 
