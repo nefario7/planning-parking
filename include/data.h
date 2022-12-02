@@ -23,4 +23,5 @@ struct Primitive {
     Point end;
     vector<Point> primitive_points;
     vector<Cell> collision_cell;
+    int idx;
 };
