@@ -9,8 +9,8 @@ main: main.o $(objects)
 planner.o: src/planner.cpp include/planner.h
 	$(CXX) -c src/planner.cpp
 
-map.o: src/map.cpp include/map.h
-	$(CXX) -c src/map.cpp
+environment.o: src/map.cpp include/environment.h
+	$(CXX) -c src/environment.cpp
 
 graph.o: src/graph.cpp include/graph.h
 	$(CXX) -c src/graph.cpp

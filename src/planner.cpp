@@ -9,8 +9,8 @@
 
 using namespace std;
 
-Planner::Planner(vector<vector<int>> map_data, unordered_map<double, vector<Primitive>> primitives_map) {
-    map.map = map_data;
+Planner::Planner(Environment env) {
+    this->env = env;
 }
 
 bool Planner::isClosed(const int s_idx) {
@@ -36,22 +36,20 @@ void Planner::search() {
     double start_theta;
     int goal_idx;
 
-    Point p = {start_x, start_y, start_theta};
+    Point p = { start_x, start_y, start_theta };
     int init_idx = get_index(p.x, p.y, p.theta);
     double h = get_heuristic(p.x, p.y, p.theta);
     double g = get_g(init_idx);
     graph.add_node(init_idx, p, g, h, -1, -1);
 
-    while(!isClosed(goal_idx) && !graph.OPEN_F.empty())
-    {
+    while (!isClosed(goal_idx) && !graph.OPEN_F.empty()) {
         int curr_idx = getFScoreIdx();
 
         int curr_x, curr_y;
         double curr_theta;
         getXYZFromIdx(curr_idx, curr_x, curr_y, curr_theta);
 
-        if (isClosed(curr_idx))
-        {
+        if (isClosed(curr_idx)) {
             continue;
         }
 
@@ -61,12 +59,10 @@ void Planner::search() {
     }
 
     printf("\n");
-    if (isClosed(goal_idx))
-    {
+    if (isClosed(goal_idx)) {
         printf("Found a plan \n");
     }
-    else
-    {
+    else {
         printf("No plan found \n");
     }
     return;
@@ -94,7 +90,7 @@ int Planner::get_index(int x, int y, double theta) {
     return x * y * theta;
 }
 
-void Planner::getXYZFromIdx(int idx, int &x, int &y, double &theta) {
+void Planner::getXYZFromIdx(int idx, int& x, int& y, double& theta) {
     // FIX THIS
     return;
 }
@@ -109,9 +105,9 @@ void Planner::expand_node(int idx) {
     int y = graph.OPEN[idx].p.y;
     double theta = graph.OPEN[idx].p.theta;
 
-    auto got = primitives_map.find(theta);
+    auto got = env.primitives_map.find(theta);
 
-    if (got == primitives_map.end()) {
+    if (got == env.primitives_map.end()) {
         printf("Angle does not exist in primitives \n");
     }
 
@@ -126,13 +122,13 @@ void Planner::expand_node(int idx) {
                 int curr_x = x + del_x;
                 int curr_y = y + del_y;
 
-                if (map.is_obstacle(curr_x, curr_y)) {
+                if (env.is_obstacle(curr_x, curr_y)) {
                     primitive_flag = false;
                     break;
                 }
             }
-            
-            Point p = {x + primitive.end.x, y + primitive.end.y, primitive.end.theta};
+
+            Point p = { x + primitive.end.x, y + primitive.end.y, primitive.end.theta };
 
             int new_idx = get_index(p.x, p.y, p.theta);
             if (primitive_flag) {

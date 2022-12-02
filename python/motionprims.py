@@ -115,7 +115,7 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
 
 def generate_mprims():
     # Generate motion primitives for all angles
-    robot_angles = np.arange(0, 360, DELTA_ANGLE)
+    robot_angles = np.arange(0, 11.25, DELTA_ANGLE)
     all_mprims = {}
     for theta in robot_angles:
         data = generate_mprims_angle(theta)

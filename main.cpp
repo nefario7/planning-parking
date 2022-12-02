@@ -6,17 +6,17 @@
 
 using namespace std;
 
-string BASE_MAP = "../scripts/base_map.csv";
+string BASE_MAP_CSV = "../scripts/base_map.csv";
+string PRIMITIVES_JSON = "../python/mprims_new.json";
 
 int main() {
     // Get the map data
-    Map m;
-    m.create_map(BASE_MAP);
-
-    unordered_map<double, vector<Primitive>> primitives_map;
+    Environment m;
+    m.create_map(BASE_MAP_CSV);
+    m.create_primitives(PRIMITIVES_JSON);
 
     // Create a planner passing the map data
-    Planner fap_planner(m.map, primitives_map);
+    Planner fap_planner(m);
 
     // Search the map with Anytime Dynamic A* or A*
     fap_planner.search();

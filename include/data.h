@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 
 using namespace std;
@@ -8,14 +9,16 @@ struct Point {
     double y;
     double theta;
 
-    Point(double x, double y, double theta) : x(x), y(y), theta(theta) {}
+    Point() {};
+    Point(double x, double y, double theta) : x(x), y(y), theta(theta) {};
 };
 
 struct Cell {
     int i;
     int j;
 
-    Cell(int i, int j) : i(i), j(j) {}
+    Cell() {};
+    Cell(int i, int j) : i(i), j(j) {};
 };
 
 struct Primitive {
