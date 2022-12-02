@@ -5,24 +5,26 @@ import matplotlib.pyplot as plt
 import json
 
 # Parameters
-dist = 0.6
-delta_angle = 11.25
-scale = 0.65
-grid_size = 0.2
+DIST = 0.6
+DELTA_ANGLE = 11.25
+GRID_SIZE = 0.2
+RESOLUTION = 0.01
+NUM_PRIMS = 5
+ADDITIONAL_PRIMS = [2, 4]   
 
 # Generate motion primitives
 print("Generating Motion Primitives...")
 
-def generate_mprims_angle(theta, num_prims = 5, fineness = 0.01):
+def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
     # Generate motion primitives for a given angle
-    max_alpha = (num_prims - 1) * delta_angle / 2
-    alpha_angles = np.arange(-max_alpha, max_alpha + delta_angle, delta_angle)
+    max_alpha = (num_prims - 1) * DELTA_ANGLE / 2
+    alpha_angles = np.arange(-max_alpha, max_alpha + DELTA_ANGLE, DELTA_ANGLE)
 
     data = {}
     idx = 0
     for alpha in alpha_angles:
-        path_start_r = np.arange(0, dist, fineness)
-        num_points = int(dist / fineness)
+        path_start_r = np.arange(0, DIST, fineness)
+        num_points = int(DIST / fineness)
 
         path_start_alpha_small = np.linspace(0, alpha, num_points*10)
         path_start_theta_small = theta + path_start_alpha_small
@@ -52,8 +54,8 @@ def generate_mprims_angle(theta, num_prims = 5, fineness = 0.01):
         mprims = [path_start_x.tolist(), path_start_y.tolist(), path_start_theta.tolist()]
 
 
-        x_end = int((path_start_x[-1] - grid_size / 2) / grid_size)
-        y_end = int((path_start_y[-1] - grid_size / 2) / grid_size)
+        x_end = int((path_start_x[-1] - GRID_SIZE / 2) / GRID_SIZE)
+        y_end = int((path_start_y[-1] - GRID_SIZE / 2) / GRID_SIZE)
 
         data[idx] = dict()
         data[idx]['start'] = [0, 0, theta]
@@ -63,12 +65,12 @@ def generate_mprims_angle(theta, num_prims = 5, fineness = 0.01):
 
         idx += 1
         
-    for i in [2, 4]:
+    for i in ADDITIONAL_PRIMS:
         alpha = 0
-        long_dist = i * dist
+        long_DIST = i * DIST
 
-        path_start_r = np.arange(0, long_dist, fineness)
-        num_points = int(long_dist / fineness)
+        path_start_r = np.arange(0, long_DIST, fineness)
+        num_points = int(long_DIST / fineness)
 
         path_start_alpha_small = np.linspace(0, alpha, num_points*10)
         path_start_theta_small = theta + path_start_alpha_small
@@ -98,8 +100,8 @@ def generate_mprims_angle(theta, num_prims = 5, fineness = 0.01):
         mprims = [path_start_x.tolist(), path_start_y.tolist(), path_start_theta.tolist()]
 
 
-        x_end = int((path_start_x[-1] - grid_size / 2) / grid_size)
-        y_end = int((path_start_y[-1] - grid_size / 2) / grid_size)
+        x_end = int((path_start_x[-1] - GRID_SIZE / 2) / GRID_SIZE)
+        y_end = int((path_start_y[-1] - GRID_SIZE / 2) / GRID_SIZE)
 
         data[idx] = dict()
         data[idx]['start'] = [0, 0, theta]
@@ -113,20 +115,37 @@ def generate_mprims_angle(theta, num_prims = 5, fineness = 0.01):
 
 def generate_mprims():
     # Generate motion primitives for all angles
-    robot_angles = np.arange(0, 360, delta_angle)
+    robot_angles = np.arange(0, 360, DELTA_ANGLE)
     all_mprims = {}
     for theta in robot_angles:
         data = generate_mprims_angle(theta)
         all_mprims[theta] = data
     return all_mprims
 
+def generate_config():
+    # Generate configuration file
+    config = {}
+    config['distance'] = DIST
+    config['grid_size'] = GRID_SIZE
+    config['delta_angle'] = DELTA_ANGLE
+    config['resolution'] = RESOLUTION
+    config['num_prims'] = NUM_PRIMS
+    config['additional_prims'] = ADDITIONAL_PRIMS
+
+    return config
+
 
 if __name__ == "__main__":
     all_mprims = generate_mprims()
+    config_mprims = generate_config()
 
     # Save the motion primitives
     with open('mprims.json', 'w') as fp:
         json.dump(all_mprims, fp)
+
+    # Save the configuration
+    with open(('mprims_config.json'), 'w') as fp:
+        json.dump(config_mprims, fp)
     
     # Plot the motion primitives
     plt.figure()
