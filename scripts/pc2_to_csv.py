@@ -23,7 +23,7 @@ def subscriberCallBack(msg):
     xyz_array = ros_numpy.point_cloud2.pointcloud2_to_xyz_array(msg)
 
     print("array size: ", xyz_array.shape)
-    file_name = "xyz_raw_3d.csv"
+    file_name = "../maps/xyz_raw_3d.csv"
     savetxt(file_name, xyz_array, delimiter=",")
     print("Saved raw array!!")
 

@@ -2,6 +2,8 @@ import numpy as np
 from numpy import savetxt
 import matplotlib.pyplot as plt
 
+grid_size = 0.2
+
 def create_viz():
     points = np.loadtxt("xyz_raw.csv", delimiter=",")
     print(points.shape)
@@ -9,10 +11,10 @@ def create_viz():
     plt.show()
 
 def create_csv():
-    points = np.loadtxt("xyz_raw_3d.csv", delimiter=",")
+    points = np.loadtxt("../maps/xyz_raw_3d.csv", delimiter=",")
     row_idx = np.asarray(np.where(np.logical_and(points[:,2]>0.3, points[:,2]<2.2)))
     scaled_points = points[row_idx[0,:], 0:4]
-    scaled_points = np.around(points * 5, decimals=0).astype(int)
+    scaled_points = np.around(points / grid_size, decimals=0).astype(int)
     
     # only for x,y columns
     scaled_points[:,0] = scaled_points[:,0] - np.min(scaled_points[:,0])
@@ -44,8 +46,8 @@ def create_csv():
  
     print("base map shape: ",base_map.shape)
     
-    file_name = "base_map.csv"
-    savetxt(file_name, base_map, delimiter=",")
+    file_name = "../maps/base_map.csv"
+    savetxt(file_name, base_map, delimiter=",", fmt='%d')
     print("Saved base map!!")
     
     plt.imshow(base_map)

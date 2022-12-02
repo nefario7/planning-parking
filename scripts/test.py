@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 
-points = np.loadtxt("xyz_raw_3d.csv", delimiter=",")
+points = np.loadtxt("../maps/xyz_raw_3d.csv", delimiter=",")
 print(np.max(points[:,0]-np.min(points[:,0])), np.max(points[:,1]-np.min(points[:,1])))
 
 # # arr1 = np.array([[0,0,0,0,0], 
