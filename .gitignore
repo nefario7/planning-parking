@@ -1,0 +1,5 @@
+.park
+
+# Output and C++ files
+*.o
+safeparking
