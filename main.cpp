@@ -2,16 +2,23 @@
 #include <vector>
 
 #include "./include/planner.h"
+#include "./include/data.h"
 
 using namespace std;
 
+string BASE_MAP = "../scripts/base_map.csv";
+
 int main() {
     // Get the map data
+    Map m;
+    m.create_map(BASE_MAP);
+
 
     // Create a planner passing the map data
-        // Create a new planner everytime map has updates
+    Planner fap_planner(m.map);
 
-    // Search the map with Anytime Dynamic A*
+    // Search the map with Anytime Dynamic A* or A*
+    fap_planner.search();
 
     // Backtrack the path
 
