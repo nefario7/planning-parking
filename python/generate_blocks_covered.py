@@ -83,12 +83,12 @@ if __name__ == "__main__":
     # plt.grid()
     # plt.show()
 
-    f = open('mprims.json')
+    f = open('mprims_dubin.json')
     data = json.load(f)
 
     # print(data["0.0"]["0"])
 
-    labels_angles = [str(l) for l in np.arange(0,360,11.25)]
+    labels_angles = [str(l) for l in np.arange(0,360,22.5)]
     labels_primitives = [str(l) for l in np.arange(0,7,1)]
 
     # labels_angles = ["0.0"]
@@ -118,7 +118,7 @@ if __name__ == "__main__":
             data[la][lp]['collisions'] = [primtive_covered_indices.T[0].tolist(),primtive_covered_indices.T[1].tolist()]
 
 
-    with open('mprims_new.json', 'w') as fp:
+    with open('mprims_dubin.json', 'w') as fp:
         json.dump(data, fp)
     
     # print(primtive_covered_indices_str)
