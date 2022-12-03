@@ -7,7 +7,7 @@ import json
 
 # Parameters
 DIST = 1.6
-DELTA_ANGLE = 22.5
+DELTA_ANGLE = 11.25
 GRID_SIZE = 0.2
 RESOLUTION = 0.01
 NUM_PRIMS = 5
@@ -103,8 +103,8 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
         
 
         data[idx] = dict()
-        data[idx]['start'] = [0, 0, theta]
-        data[idx]['end'] = [x_end_pt, y_end_pt, theta + alpha]
+        data[idx]['start'] = [0, 0, theta*(PI/180)]
+        data[idx]['end'] = [x_end_pt, y_end_pt, (theta + alpha)*(PI/180)]
         xx, yy, theta1 = create_spline(0,0,theta*(PI/180), x_end_pt, y_end_pt, (theta+alpha)*(PI/180))
         # print(len(xx), len(yy), len(path_start_theta.tolist()))
         mprims = [xx,yy, theta1]
@@ -162,8 +162,8 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
         y_end_pt = y_end * GRID_SIZE
 
         data[idx] = dict()
-        data[idx]['start'] = [0, 0, theta]
-        data[idx]['end'] = [x_end_pt, y_end_pt, theta + alpha]
+        data[idx]['start'] = [0, 0, theta*(PI/180)]
+        data[idx]['end'] = [x_end_pt, y_end_pt, (theta + alpha)*(PI/180)]
         xx, yy, theta1 = create_spline(0,0,theta*(PI/180), x_end_pt, y_end_pt, (theta+alpha)*(PI/180))
         # print(len(xx), len(yy), len(path_start_theta.tolist()))
         mprims = [xx,yy, theta1]
@@ -201,11 +201,11 @@ if __name__ == "__main__":
     config_mprims = generate_config()
 
     # Save the motion primitives
-    with open('mprims.json', 'w') as fp:
+    with open('mprims_spline.json', 'w') as fp:
         json.dump(all_mprims, fp)
 
     # Save the configuration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
-    with open(('mprims_config.json'), 'w') as fp:
+    with open(('mprims_config_spline.json'), 'w') as fp:
         json.dump(config_mprims, fp)
     
     # Plot the motion primitives
