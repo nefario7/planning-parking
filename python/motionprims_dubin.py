@@ -10,7 +10,7 @@ from dubins_path import generate_dubin_points
 DIST = 1.6
 START_ANGLE = 0
 DELTA_ANGLE = 22.5
-END_ANGLE = 22.5
+END_ANGLE = 360
 GRID_SIZE = 0.2
 RESOLUTION = 0.01
 NUM_PRIMS = 5
@@ -66,15 +66,18 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
         x_end_pt = x_end * GRID_SIZE
         y_end_pt = y_end * GRID_SIZE
 
-        theta = np.deg2rad(theta)
-        new_theta = np.deg2rad(theta + alpha)
+        theta_rad = np.deg2rad(theta)
+        
+        theta_plus_alpha_rad = np.deg2rad(theta + alpha)
+        print("new theta is in degs",theta+alpha)
 
-        start_point = [0, 0, theta]
-        end_point = [x_end_pt, y_end_pt, new_theta]
-        curvature = abs(alpha / DELTA_ANGLE) / 1.6
+        start_point = [0, 0, theta_rad]
+        end_point = [x_end_pt, y_end_pt, theta_plus_alpha_rad]
+        curvature = 1/1.6
+        # /curvature = abs(alpha / DELTA_ANGLE) / 1.6
 
-        print(start_point)
-        print(end_point)
+        print("Start point for dubins is : ", [start_point[0],start_point[1],np.rad2deg(start_point[2])])
+        print("End point for dubins is : ", [end_point[0],end_point[1],np.rad2deg(end_point[2])])
         [path_x, path_y, path_yaw, length] = generate_dubin_points(start_point, end_point, 1.6, curvature, RESOLUTION)
 
         # mprims = [path_start_x.tolist(), path_start_y.tolist(), path_start_theta.tolist()]
@@ -82,7 +85,7 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
 
         data[idx] = dict()
         data[idx]['start'] = [0, 0, theta]
-        data[idx]['end'] = [x_end, y_end, new_theta]
+        data[idx]['end'] = [x_end, y_end, theta_plus_alpha_rad]
         data[idx]['mprim'] = mprims
         data[idx]['collisions'] = []
 
@@ -120,15 +123,19 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
 
         # path_start_x = path_start_r * np.cos(path_start_theta)
         # path_start_y = path_start_r * np.sin(path_start_theta)
+
         mprims = [path_start_x.tolist(), path_start_y.tolist(), path_start_theta.tolist()]
 
-
-        x_end = int((path_start_x[-1] - GRID_SIZE / 2) / GRID_SIZE)
-        y_end = int((path_start_y[-1] - GRID_SIZE / 2) / GRID_SIZE)
+        x_end = int((path_start_x[-1] + GRID_SIZE / 2) / GRID_SIZE)
+        y_end = int((path_start_y[-1] + GRID_SIZE / 2) / GRID_SIZE)
+        if path_start_x[-1] + GRID_SIZE / 2 < 0:
+            x_end -= 1
+        if path_start_y[-1] + GRID_SIZE / 2 < 0:
+            y_end -= 1
 
         data[idx] = dict()
-        data[idx]['start'] = [0, 0, theta]
-        data[idx]['end'] = [x_end, y_end, theta + alpha]
+        data[idx]['start'] = [0, 0, np.deg2rad(theta)]
+        data[idx]['end'] = [x_end, y_end, np.deg2rad(theta + alpha)]
         data[idx]['mprim'] = mprims
         data[idx]['collisions'] = []
 
