@@ -10,6 +10,9 @@ string BASE_MAP_CSV = "../scripts/base_map.csv";
 string PRIMITIVES_JSON = "../python/mprims_new.json";
 
 int main() {
+    // Read the configuration file
+    //! Need to do this
+
     // Get the map data
     Environment m;
     m.create_map(BASE_MAP_CSV);

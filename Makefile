@@ -1,5 +1,5 @@
 CXX := g++
-objects := planner.o map.o graph.o
+objects := planner.o environment.o graph.o
 
 all: main
 
@@ -9,7 +9,7 @@ main: main.o $(objects)
 planner.o: src/planner.cpp include/planner.h
 	$(CXX) -c src/planner.cpp
 
-environment.o: src/map.cpp include/environment.h
+environment.o: src/environment.cpp include/environment.h
 	$(CXX) -c src/environment.cpp
 
 graph.o: src/graph.cpp include/graph.h

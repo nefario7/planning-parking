@@ -92,7 +92,7 @@ void Environment::create_primitives(const string file_name) {
             const Value& end = p["end"];
 
             const Value& primitive_points = p["mprim"];
-            const Value& collision_cell = p["collisions"];
+            const Value& collision_cells = p["collisions"];
 
             vector<Point> prim_points;
             const Value& x_vals = primitive_points[0];
@@ -104,8 +104,8 @@ void Environment::create_primitives(const string file_name) {
             }
 
             vector<Cell> prim_cells;
-            const Value& i_vals = collision_cell[0];
-            const Value& j_vals = collision_cell[1];
+            const Value& i_vals = collision_cells[0];
+            const Value& j_vals = collision_cells[1];
             for (SizeType k = 0; k < i_vals.Size(); k++) {
                 Cell temp_cell(i_vals[k].GetInt(), j_vals[k].GetInt());
                 prim_cells.push_back(temp_cell);
@@ -131,7 +131,7 @@ void Environment::create_primitives(const string file_name) {
 //         cout << "Start: " << p.start.x << ", " << p.start.y << ", " << p.start.theta << endl;
 //         cout << "End: " << p.end.x << ", " << p.end.y << ", " << p.end.theta << endl;
 //         cout << "Primitive points: " << p.primitive_points.size() << endl;
-//         cout << "Collision cells: " << p.collision_cell.size() << endl;
+//         cout << "Collision cells: " << p.collision_cells.size() << endl;
 //     }
 
 //     return 0;

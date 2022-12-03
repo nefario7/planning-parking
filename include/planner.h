@@ -20,9 +20,21 @@ private:
     // vector<vector<int>> map;
     // unordered_map<double, vector<Primitive>> primitives_map;    // robot_angle : vector<Primitive>
 
-    void expand_node(int idx);
+    // Start and goal points
+    int start_idx, goal_idx;
+    Point start_point, goal_point;
 
-    double get_g(int idx);
+    // A* lists
+    unordered_set<int> closed;
+    priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> open;
+
+    // Backtracked path
+    vector<int> path;
+    vector<Point> robot_points;
+
+    bool in_closed(const int& idx) const;
+
+    double get_heuristic(Point& curr_point, const string& method) const;
 
     double step_cost(int idx);
 
@@ -30,13 +42,7 @@ private:
 
     void getXYZFromIdx(int idx, int& x, int& y, double& theta);
 
-    int get_heuristic(int x, int y, double theta);
-
-    bool isClosed(const int s_idx);
-
-    int getFScoreIdx();
-
-    void insertClosed(const int s_idx);
+    void expand_node(const int& idx);
 
 public:
     Planner(Environment env);
@@ -44,4 +50,6 @@ public:
     void search();
 
     void backtrack();
+
+    vector<Point> get_robot_points();
 };
