@@ -1,6 +1,11 @@
 import numpy as np
 from numpy import savetxt
 import matplotlib.pyplot as plt
+import matplotlib.transforms as mtransforms
+import matplotlib.cbook as cbook
+import matplotlib.patches as patches
+import matplotlib as mpl
+import sys
 
 grid_size = 0.2
 
@@ -51,7 +56,8 @@ def create_csv():
     print("Saved base map!!")
     
     plt.imshow(base_map)
-    plt.show()
+    plt.savefig("../maps/base_map.png")
+    # plt.show()
 
     # print(base_map.shape)
 
@@ -64,13 +70,63 @@ def rough():
     min_z = np.min(points[:,2])
     max_z = np.max(points[:,2])
     print(min_z, max_z)
+
+def get_image():
+    fn = cbook.get_sample_data("necked_tensile_specimen.png")
+    arr = plt.imread(fn)
+    mask = (arr == (1,1,1,1)).all(axis=-1)
+    arr[mask] = 0
+    return arr
+
+def plot_robot(fig, coords, thetas):
+    for i in range(coords.shape[0]):
+        # ax = fig.add_subplot(111)
+
+        position = (coords[i][0], coords[i][1])
+
+        r1 = patches.Rectangle(position, 3, 4, color="blue", alpha=0.50)
+        t2 = mpl.transforms.Affine2D().rotate_deg(thetas[i])#  + ax.transData
+        r1.set_transform(t2)
+
+        fig.add_patch(r1)
     
 
+def plot_path(path_to_waypoints):
+    map_arr = np.loadtxt("mit_base_map.csv",
+                    delimiter=",", dtype=int)
 
+    way_points = np.loadtxt(path_to_waypoints, delimiter=",", dtype=float)
+    coords = way_points[:,1:3]
+    thetas = way_points[:,-1]
+    thetas = np.deg2rad(thetas)
+    car_width = 6
+    car_length = 8
 
+    x_vector = 40.0 * np.cos(thetas)
+    y_vector = 40.0 * np.sin(thetas)
+
+    x_rotated = x_vector * np.cos(-np.pi / 2) - y_vector * np.sin(-np.pi / 2)
+    y_rotated = x_vector * np.sin(-np.pi / 2) + y_vector * np.cos(-np.pi / 2)
+
+    # fig = plt.figure()
+
+    # plot_robot(fig, coords, thetas)
+
+    plt.imshow(map_arr)
+    plt.plot(coords[:,1], coords[:,0], color ='r', linewidth = 1, zorder = 1 )
+    
+    # plt.quiver(coords[:,1], coords[:,0], thetas, angles='uv')
+    plt.scatter(coords[:,1], coords[:,0], color ='w', s=1, zorder= 2)
+    plt.quiver(coords[:,1], coords[:,0], x_rotated, y_rotated, angles='uv', zorder = 3)
+    
+    plt.show()
 
 
 if __name__ == '__main__':
-    create_csv()
+    # create_csv()
     # create_viz()
     # rough()
+    n = len(sys.argv)
+    path_to_waypoints = sys.argv[1]
+    # "mit_base_map_wp_turn2.txt"
+    plot_path(path_to_waypoints)
