@@ -18,7 +18,7 @@ public:
     int size_x;
     int size_y;
     int size_theta;
-    // int size_theta;
+    float disc_theta;
 
     Point start_point;
     Point goal_point;

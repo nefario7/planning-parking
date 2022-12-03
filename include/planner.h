@@ -38,11 +38,13 @@ private:
 
     double step_cost(int idx);
 
-    int get_index(int x, int y, double theta);
+    int get_index(const Point& p) const;
 
-    void getXYZFromIdx(int idx, int& x, int& y, double& theta);
+    // void getXYZFromIdx(int idx, int& x, int& y, double& theta);
 
     void expand_node(const int& idx);
+
+    bool is_valid_cell(int a, int b) const;
 
 public:
     Planner(Environment env);

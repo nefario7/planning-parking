@@ -12,6 +12,11 @@ using namespace rapidjson;
 void Environment::create_map(string file_name) {
     ifstream input_file;
     input_file.open(file_name, ios::in);
+
+    if (!input_file.is_open()) {
+        cout << "Error opening file" << endl;
+        return;
+    }
     cout << "Creating map from : " << file_name << endl;
     string line = "";
 
@@ -30,6 +35,10 @@ void Environment::create_map(string file_name) {
         row.clear();
     }
     // cout<<"map: "<<map.size()<<endl;
+
+    size_x = map.size();
+    size_y = map[0].size();
+    cout << "map sizes = " << size_x << " " << size_y << endl;
 }
 
 bool Environment::is_obstacle(int a, int b) {
@@ -65,6 +74,8 @@ void Environment::create_primitives(const string file_name) {
         cout << "Error opening file" << endl;
         return;
     }
+
+    cout << "Create primitives called \n";
 
     // Read json with rapidjson and store primitives in a map
     IStreamWrapper isw(input_file);

@@ -14,11 +14,14 @@ using namespace std;
 // Public methods
 Planner::Planner(Environment env) {
     this->env = env;
-    // this->start_idx = get_index(p.x, p.y, p.theta);      //! Need to do this 
-    // this->goal_idx = get_index(p.x, p.y, p.theta);       //! Need to do this
-    //! Get start and end from the environment
-    this->start_point = Point(0, 0, 0);
-    this->goal_point = Point(1, 1, 1);
+
+    //! Get start and goal from the environment
+    this->start_point = Point(43, 10, 0);
+    this->goal_point = Point(43, 30, 0);
+
+    // Get start and goal idx
+    this->start_idx = get_index(start_point);
+    this->goal_idx = get_index(goal_point);
 
     // Add start state to the graph
     graph.add_node(start_idx, start_point);
@@ -107,14 +110,20 @@ double Planner::step_cost(int idx) {
     return 1.0;
 }
 
-int Planner::get_index(int x, int y, double theta) {
-    // FIX THIS
-    return x * y * theta;
+int Planner::get_index(const Point &p) const {
+    return GETXYTINDEX(p.x, p.y, p.theta, env.size_x, env.size_theta, env.disc_theta);
 }
 
-void Planner::getXYZFromIdx(int idx, int& x, int& y, double& theta) {
-    // FIX THIS
-    return;
+// void Planner::getXYZFromIdx(int idx, int& x, int& y, double& theta) {
+//     // FIX THIS
+//     return;
+// }
+
+bool Planner::is_valid_cell(const int a, const int b) const {
+    if (a < 0 || b < 0 || a >= env.size_x || b >= env.size_y) {
+        return false;
+    }
+    return true;
 }
 
 void Planner::expand_node(const int& idx) {
@@ -123,6 +132,7 @@ void Planner::expand_node(const int& idx) {
     // Get the primitives for the current angle
     if (env.primitives_map.find(curr_point.theta) == env.primitives_map.end()) {
         printf("Angle does not exist in primitives \n");
+        printf("Current theta is %f \n", curr_point.theta);
         throw runtime_error("Angle does not exist in primitives");
     }
 
@@ -132,6 +142,9 @@ void Planner::expand_node(const int& idx) {
         for (auto c : primitive.collision_cells) {
             int check_x = (int)(curr_point.x + c.i);
             int check_y = (int)(curr_point.y + c.j);
+
+            if (!is_valid_cell(check_x, check_y)) continue;
+
             if (env.is_obstacle(check_x, check_y)) {
                 collision = true;
                 break;
@@ -140,7 +153,7 @@ void Planner::expand_node(const int& idx) {
 
         if (!collision) {
             Point new_point(curr_point.x + primitive.end.x, curr_point.y + primitive.end.y, primitive.end.theta);
-            int new_idx = get_index(curr_point.x, curr_point.y, curr_point.theta);
+            int new_idx = get_index(curr_point);
 
             graph.add_node(new_idx, new_point);
 
