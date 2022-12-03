@@ -17,6 +17,11 @@ public:
     std::vector<std::vector<int>>map;
     int size_x;
     int size_y;
+    int size_theta;
+    // int size_theta;
+
+    Point start_point;
+    Point goal_point;
 
     // Primitives data
     unordered_map<double, std::vector<Primitive>> primitives_map;

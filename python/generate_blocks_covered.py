@@ -118,7 +118,7 @@ if __name__ == "__main__":
             data[la][lp]['collisions'] = [primtive_covered_indices.T[0].tolist(),primtive_covered_indices.T[1].tolist()]
 
 
-    with open('mprims_new.json', 'w') as fp:
+    with open('mprims_dubin.json', 'w') as fp:
         json.dump(data, fp)
     
     # print(primtive_covered_indices_str)

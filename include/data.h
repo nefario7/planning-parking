@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#define GETXYTINDEX(X, Y, THETA, XSIZE,THETA_SIZE, THETA_DISC) ((int)(THETA/THETA_DISC)+THETA_SIZE*(Y*XSIZE +X))
+
 using namespace std;
 
 struct Point {
