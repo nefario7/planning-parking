@@ -19,6 +19,13 @@ ADDITIONAL_PRIMS = [2, 4]
 # Generate motion primitives
 print("Generating Motion Primitives...")
 
+def wrap_to_360(angle):
+    while angle >= 360:
+        angle -= 360
+    while angle < 0:
+        angle += 360
+    return angle
+
 def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
     # Generate motion primitives for a given angle
     max_alpha = (num_prims - 1) * DELTA_ANGLE / 2
@@ -69,15 +76,22 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
         theta_rad = np.deg2rad(theta)
         
         theta_plus_alpha_rad = np.deg2rad(theta + alpha)
-        print("new theta is in degs",theta+alpha)
+        # print("new theta is in degs",theta+alpha)
+
+        #! Implement wrap2pi on alpha + theta       - Done
+        #! Correct the scaled up straight lines     - Done
+#         Start:  [0, 0, 5.8904862254808625]
+#         End:  [15, -6, 5.8904862254808625]
+#         Start:  [0, 0, 5.8904862254808625]
+#         End:  [30, -12, 5.8904862254808625]
 
         start_point = [0, 0, theta_rad]
         end_point = [x_end_pt, y_end_pt, theta_plus_alpha_rad]
         curvature = 1/1.6
         # /curvature = abs(alpha / DELTA_ANGLE) / 1.6
 
-        print("Start point for dubins is : ", [start_point[0],start_point[1],np.rad2deg(start_point[2])])
-        print("End point for dubins is : ", [end_point[0],end_point[1],np.rad2deg(end_point[2])])
+        # print("Start point for dubins is : ", [start_point[0],start_point[1],np.rad2deg(start_point[2])])
+        # print("End point for dubins is : ", [end_point[0],end_point[1],np.rad2deg(end_point[2])])
         [path_x, path_y, path_yaw, length] = generate_dubin_points(start_point, end_point, 1.6, curvature, RESOLUTION)
 
         # mprims = [path_start_x.tolist(), path_start_y.tolist(), path_start_theta.tolist()]
@@ -85,7 +99,7 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
 
         data[idx] = dict()
         data[idx]['start'] = [0, 0, theta]
-        data[idx]['end'] = [x_end, y_end, theta_plus_alpha_rad]
+        data[idx]['end'] = [x_end, y_end, wrap_to_360(theta+alpha)]
         data[idx]['mprim'] = mprims
         data[idx]['collisions'] = []
 
@@ -134,8 +148,8 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
             y_end -= 1
 
         data[idx] = dict()
-        data[idx]['start'] = [0, 0, np.deg2rad(theta)]
-        data[idx]['end'] = [x_end, y_end, np.deg2rad(theta + alpha)]
+        data[idx]['start'] = [0, 0, theta]
+        data[idx]['end'] = [x_end, y_end, wrap_to_360(theta + alpha)]
         data[idx]['mprim'] = mprims
         data[idx]['collisions'] = []
 
@@ -180,12 +194,15 @@ if __name__ == "__main__":
     # Plot the motion primitives
     plt.figure()
     for angle, data in all_mprims.items():
-        # print("Angle: ", angle)
+        print("Angle: ", angle)
         for idx, data1 in data.items():
             # print("Motion Primitive: ", idx, end = " ")
             # print("X: ", mprim[0], end = " ")
             # print("Y: ", mprim[1], end = " ")
             # print("Theta: ", mprim[2])
+
+            print("Start: ", data1["start"])
+            print("End: ", data1["end"])
 
             plt.plot(data1['mprim'][0], data1['mprim'][1], label = "Angle: " + str(angle) + " Motion Primitive: " + str(idx))
 

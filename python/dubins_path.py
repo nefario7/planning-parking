@@ -450,7 +450,7 @@ def plot_curvature(x_list, y_list, heading_list, curvature,
 
 
 def generate_dubin_points(start, end, min_turn_radius, curvature, step_size):
-    print("Dubins path planner sample start!!")
+    # print("Dubins path planner sample start!!")
     import matplotlib.pyplot as plt
 
     [start_x, start_y, start_yaw] = start
