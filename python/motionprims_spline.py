@@ -106,6 +106,10 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
         data[idx]['start'] = [0, 0, theta*(PI/180)]
         data[idx]['end'] = [x_end_pt, y_end_pt, (theta + alpha)*(PI/180)]
         xx, yy, theta1 = create_spline(0,0,theta*(PI/180), x_end_pt, y_end_pt, (theta+alpha)*(PI/180))
+        # if (theta*(PI/180) == (theta+alpha)*(PI/180)):
+        #     xx = list(np.linspace(0, x_end_pt, 60))
+        #     yy = list(np.linspace(0, y_end_pt, 60))
+        #     theta1=(np.ones(np.linspace(0, x_end_pt, 60).shape)*theta*(PI/180)).tolist()
         # print(len(xx), len(yy), len(path_start_theta.tolist()))
         mprims = [xx,yy, theta1]
         data[idx]['mprim'] = mprims
@@ -165,23 +169,42 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
         data[idx]['start'] = [0, 0, theta*(PI/180)]
         data[idx]['end'] = [x_end_pt, y_end_pt, (theta + alpha)*(PI/180)]
         xx, yy, theta1 = create_spline(0,0,theta*(PI/180), x_end_pt, y_end_pt, (theta+alpha)*(PI/180))
+        # if (theta*(PI/180) == (theta+alpha)*(PI/180)):
+        #     xx = list(np.linspace(0, x_end_pt, 60))
+        #     yy = list(np.linspace(0, y_end_pt, 60))
+        #     theta1=(np.ones(np.linspace(0, x_end_pt, 60).shape)*theta*(PI/180)).tolist()
         # print(len(xx), len(yy), len(path_start_theta.tolist()))
         mprims = [xx,yy, theta1]
         data[idx]['mprim'] = mprims
         data[idx]['collisions'] = []
 
         idx += 1
-    # print("data: \n", data)
+    # print("data: \n", len(data))
     return data
 
 def generate_mprims():
     # Generate motion primitives for all angles
     robot_angles = np.arange(0, 11.25, DELTA_ANGLE)
     all_mprims = {}
+    all_mprims1 = {}
+    data = generate_mprims_angle(0)
+    all_mprims[0] = data
+
+    # print(all_mprims)
+
     for theta in robot_angles:
         data = generate_mprims_angle(theta)
-        all_mprims[theta] = data
-    return all_mprims
+        all_mprims1[theta] = data
+    # print(len(all_mprims1))
+    # print(all_mprims1[theta])    
+    # for key in all_mprims1:
+        # print(key)
+
+    for rot_angle in np.arange(45, 360, 11.25):
+        for key in all_mprims1:
+            print(all_mprims1[key][2])
+        
+    return all_mprims1
 
 def generate_config():
     # Generate configuration file
@@ -199,6 +222,7 @@ def generate_config():
 if __name__ == "__main__":
     all_mprims = generate_mprims()
     config_mprims = generate_config()
+    # print("all_mprims:\n", all_mprims)
 
     # Save the motion primitives
     with open('mprims_spline.json', 'w') as fp:
@@ -220,5 +244,5 @@ if __name__ == "__main__":
 
             plt.plot(data1['mprim'][0], data1['mprim'][1], label = "Angle: " + str(angle) + " Motion Primitive: " + str(idx))
 
-    plt.show()
+    # plt.show()
         
