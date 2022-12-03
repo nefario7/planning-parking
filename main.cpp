@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <cfloat>
+#include <cmath>
 
 #include "./include/planner.h"
 #include "./include/data.h"
@@ -7,10 +9,12 @@
 using namespace std;
 
 string BASE_MAP_CSV = "./scripts/mit_base_map.csv";
-string PRIMITIVES_JSON = "./python/mprims_new.json";
+string PRIMITIVES_JSON = "./python/mprims_dubin.json";
+string WAYPOINT_TXT = "./waypoints/mit_base_map_wp.txt";
 
 // CONFIGURATION
 float DISC_THETA = 22.5;
+
 
 int main() {
     // Read the configuration file
@@ -18,10 +22,10 @@ int main() {
 
     // Get the map data
     Environment m;
+    m.disc_theta = DISC_THETA;
     m.create_map(BASE_MAP_CSV);
     m.create_primitives(PRIMITIVES_JSON);
-    m.disc_theta = DISC_THETA;
-
+    
     // Create a planner passing the map data
     Planner fap_planner(m);
 
@@ -29,8 +33,23 @@ int main() {
     fap_planner.search();
 
     // Backtrack the path
+    fap_planner.backtrack();
 
     // Print the path
+    vector<Point> waypoints = fap_planner.get_robot_points();
+
+    ofstream output_file;
+    output_file.open(WAYPOINT_TXT, ios::out);
+
+    cout << "Waypoints" << endl;
+    for(unsigned int i = 0; i < waypoints.size(); i++){
+        cout << i << " : " << waypoints[i].x << ", " << waypoints[i].y << ", " << waypoints[i].theta << endl;
+        output_file << i << "," << waypoints[i].x << "," << waypoints[i].y << "," << waypoints[i].theta << endl;
+    }
+
+    output_file.close();
+
+
 
     return 0;
 }

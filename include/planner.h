@@ -40,7 +40,7 @@ private:
 
     int get_index(const Point& p) const;
 
-    // void getXYZFromIdx(int idx, int& x, int& y, double& theta);
+    Point get_xytheta(const int &idx) const;
 
     void expand_node(const int& idx);
 

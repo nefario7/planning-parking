@@ -4,3 +4,4 @@
 # Output and C++ files
 *.o
 safeparking
+python/__pycache__/

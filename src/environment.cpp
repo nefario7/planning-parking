@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "../include/environment.h"
 #include "../include/data.h"
 #include "../include/rapidjson/document.h"
@@ -38,7 +40,9 @@ void Environment::create_map(string file_name) {
 
     size_x = map.size();
     size_y = map[0].size();
-    cout << "map sizes = " << size_x << " " << size_y << endl;
+    size_theta = (int) (360 / disc_theta);
+    cout << "disc theta = " << disc_theta << endl;
+    cout << "map sizes = " << size_x << " " << size_y << " " << size_theta << endl;
 }
 
 bool Environment::is_obstacle(int a, int b) {

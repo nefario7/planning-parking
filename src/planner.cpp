@@ -17,11 +17,18 @@ Planner::Planner(Environment env) {
 
     //! Get start and goal from the environment
     this->start_point = Point(43, 10, 0);
-    this->goal_point = Point(43, 30, 0);
+    this->goal_point = Point(358, 99, 90);
+
+    if (!env.is_open(43, 10) && !env.is_open(360, 100)) {
+        throw runtime_error("BC sahi points do!");
+    }
 
     // Get start and goal idx
     this->start_idx = get_index(start_point);
     this->goal_idx = get_index(goal_point);
+
+    cout << "Idxs start " << start_idx << " goal " << goal_idx << endl;
+
 
     // Add start state to the graph
     graph.add_node(start_idx, start_point);
@@ -40,6 +47,7 @@ void Planner::search() {
     // Add start state to the open list
     open.push(make_pair(graph.nodes_map[start_idx].get_f(), start_idx));
 
+    int expansions = 0;
     while (!open.empty() && !in_closed(goal_idx)) {
         // Get the index of the node with the lowest f score
         double curr_f = open.top().first;
@@ -49,6 +57,13 @@ void Planner::search() {
         // Get the node with the lowest f score
         Node curr_node = graph.nodes_map[curr_idx];
 
+        Point p = get_xytheta(curr_idx);
+        if (get_heuristic(p, "euclidean2D") < 2){
+            cout << "Fuck man, I have reached the goal!" << endl;
+            cout << p.theta << endl;
+            goal_idx = curr_idx;
+        }
+
         // Add the node to the closed list if not already there
         if (in_closed(curr_idx))
             continue;
@@ -56,12 +71,19 @@ void Planner::search() {
 
         // Expand the node
         expand_node(curr_idx);
+        expansions++;
+        if (expansions % 10000 == 0) {
+            cout << "Expanded " << expansions << " nodes" << endl;
+        }
     }
 
     if (in_closed(goal_idx))
         cout << "Found a plan \n";
     else
+    {
+        cout << "Nodes expanded = " << expansions;
         printf("No plan found \n");
+    }
     return;
 }
 
@@ -111,13 +133,18 @@ double Planner::step_cost(int idx) {
 }
 
 int Planner::get_index(const Point &p) const {
+    // cout << "size theta = " << env.size_theta << endl;
     return GETXYTINDEX(p.x, p.y, p.theta, env.size_x, env.size_theta, env.disc_theta);
 }
 
-// void Planner::getXYZFromIdx(int idx, int& x, int& y, double& theta) {
-//     // FIX THIS
-//     return;
-// }
+Point Planner::get_xytheta(const int &idx) const {
+    Point p;
+    p.x = GETXFROMINDEX(idx, env.size_x, env.size_theta, env.disc_theta);
+    p.y = GETYFROMINDEX(idx, env.size_x, env.size_theta, env.disc_theta);
+    p.theta = GETTHETAFROMINDEX(idx, env.size_x, env.size_theta, env.disc_theta);
+
+    return p;
+}
 
 bool Planner::is_valid_cell(const int a, const int b) const {
     if (a < 0 || b < 0 || a >= env.size_x || b >= env.size_y) {
@@ -128,6 +155,8 @@ bool Planner::is_valid_cell(const int a, const int b) const {
 
 void Planner::expand_node(const int& idx) {
     Point curr_point = graph.nodes_map[idx].p;
+
+    // cout << "expanding " << idx << endl;
 
     // Get the primitives for the current angle
     if (env.primitives_map.find(curr_point.theta) == env.primitives_map.end()) {
@@ -146,6 +175,7 @@ void Planner::expand_node(const int& idx) {
             if (!is_valid_cell(check_x, check_y)) continue;
 
             if (env.is_obstacle(check_x, check_y)) {
+                // cout << "Collision happening at " << check_x << " " << check_y << endl;
                 collision = true;
                 break;
             }
@@ -153,7 +183,7 @@ void Planner::expand_node(const int& idx) {
 
         if (!collision) {
             Point new_point(curr_point.x + primitive.end.x, curr_point.y + primitive.end.y, primitive.end.theta);
-            int new_idx = get_index(curr_point);
+            int new_idx = get_index(new_point);
 
             graph.add_node(new_idx, new_point);
 
@@ -161,6 +191,10 @@ void Planner::expand_node(const int& idx) {
                 graph.nodes_map[new_idx].g = graph.nodes_map[idx].g + step_cost(primitive.idx);
                 graph.nodes_map[new_idx].h = get_heuristic(new_point, "euclidean2D");
                 graph.nodes_map[new_idx].parent_idx = idx;
+                if (idx < 0){
+                    cout << "Parent Index = " << idx << endl;
+                    throw runtime_error("Negative Index!");
+                }
                 graph.nodes_map[new_idx].primitive_idx = primitive.idx;
 
                 open.push(make_pair(graph.nodes_map[new_idx].get_f(), new_idx));
