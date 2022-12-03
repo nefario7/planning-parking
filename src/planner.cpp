@@ -16,8 +16,13 @@ Planner::Planner(Environment env) {
     this->env = env;
 
     //! Get start and goal from the environment
-    this->start_point = Point(43, 10, 0);
-    this->goal_point = Point(358, 99, 90);
+    // this->start_point = Point(43, 10, 0);
+    this->start_point = Point(600, 10, 180);
+    // this->start_point = Point(200, 205, 180);
+    // this->goal_point = Point(358, 99, 45);
+    // this->goal_point = Point(43, 10, 180);
+    this->goal_point = Point(600, 10, 90);
+    // this->goal_point = Point(200, 205, 90);
 
     if (!env.is_open(43, 10) && !env.is_open(360, 100)) {
         throw runtime_error("BC sahi points do!");
@@ -58,7 +63,7 @@ void Planner::search() {
         Node curr_node = graph.nodes_map[curr_idx];
 
         Point p = get_xytheta(curr_idx);
-        if (get_heuristic(p, "euclidean2D") < 2){
+        if (goal_reached(p, 1, 1, 0)){
             cout << "Fuck man, I have reached the goal!" << endl;
             cout << p.theta << endl;
             goal_idx = curr_idx;
@@ -128,6 +133,16 @@ double Planner::get_heuristic(Point& curr_point, const string& method) const {
     return 0;
 }
 
+bool Planner::goal_reached(Point& curr_point, const int& delta_x = 1, const int& delta_y = 1, const double& delta_theta = 22.5) {
+
+    if(abs(curr_point.x - goal_point.x) <= delta_x && abs(curr_point.y - goal_point.y) <= delta_y 
+        && abs(curr_point.theta - goal_point.theta) <= delta_theta) {
+        return true;
+    }
+    
+    return false;
+}
+
 double Planner::step_cost(int idx) {
     return 1.0;
 }
@@ -174,7 +189,7 @@ void Planner::expand_node(const int& idx) {
 
             if (!is_valid_cell(check_x, check_y)) continue;
 
-            if (env.is_obstacle(check_x, check_y)) {
+            if (env.is_obstacle(check_x, check_y) || env.is_unknown(check_x, check_y)) {
                 // cout << "Collision happening at " << check_x << " " << check_y << endl;
                 collision = true;
                 break;

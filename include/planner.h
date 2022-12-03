@@ -36,6 +36,8 @@ private:
 
     double get_heuristic(Point& curr_point, const string& method) const;
 
+    bool goal_reached(Point& curr_point, const int& delta_x, const int& delta_y, const double& delta_theta);
+
     double step_cost(int idx);
 
     int get_index(const Point& p) const;
