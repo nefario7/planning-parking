@@ -51,7 +51,8 @@ def create_csv():
     print("Saved base map!!")
     
     plt.imshow(base_map)
-    plt.show()
+    plt.savefig("../maps/base_map.png")
+    # plt.show()
 
     # print(base_map.shape)
 

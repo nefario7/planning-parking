@@ -2,15 +2,52 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.interpolate import CubicSpline, CubicHermiteSpline
 import json
 
 # Parameters
-DIST = 0.6
-DELTA_ANGLE = 11.25
+DIST = 1.6
+DELTA_ANGLE = 22.5
 GRID_SIZE = 0.2
 RESOLUTION = 0.01
 NUM_PRIMS = 5
 ADDITIONAL_PRIMS = [2, 4]   
+PI = 3.141589
+
+
+def get_y(x, c_arr):
+
+    y = c_arr[0]*(x**3) + c_arr[1]*(x**2) + c_arr[2]*(x**1) + c_arr[3]*(x**0)
+    slope = 3*c_arr[0]*(x**2) + 2*c_arr[1]*(x**1) + 1*c_arr[2]*(x**0)
+    theta = np.arctan(slope)
+    # print("yy-->", y[0])
+
+    return y[0], theta[0]
+
+def create_spline(x_start, y_start, theta_start, x_end, y_end, theta_end):
+
+    x = [x_start, x_end]
+    y = [y_start, y_end]
+    dydx = [np.tan(theta_start), np.tan(theta_end)]
+
+    spline = CubicHermiteSpline(x, y, dydx)
+    xx = list(np.linspace(spline.x[0], spline.x[1], 60))
+    yy = []
+    theta = []
+
+    for i in xx:
+        y_, theta_ = get_y(i, spline.c)
+        # yy.append(get_y(i, spline.c))
+        yy.append(y_)
+        theta.append(theta_)
+
+    # print(len(xx))
+    # print(len(yy))
+
+    # print("X-->",xx)
+    # print("Y-->",yy)
+
+    return xx, yy, theta
 
 # Generate motion primitives
 print("Generating Motion Primitives...")
@@ -54,12 +91,23 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
         mprims = [path_start_x.tolist(), path_start_y.tolist(), path_start_theta.tolist()]
 
 
-        x_end = int((path_start_x[-1] - GRID_SIZE / 2) / GRID_SIZE)
-        y_end = int((path_start_y[-1] - GRID_SIZE / 2) / GRID_SIZE)
+        x_end = int((path_start_x[-1] + GRID_SIZE / 2) / GRID_SIZE)
+        y_end = int((path_start_y[-1] + GRID_SIZE / 2) / GRID_SIZE)
+        if path_start_x[-1] + GRID_SIZE / 2 < 0:
+            x_end -= 1
+        if path_start_y[-1] + GRID_SIZE / 2 < 0:
+            y_end -= 1
+
+        x_end_pt = x_end * GRID_SIZE
+        y_end_pt = y_end * GRID_SIZE
+        
 
         data[idx] = dict()
         data[idx]['start'] = [0, 0, theta]
-        data[idx]['end'] = [x_end, y_end, theta + alpha]
+        data[idx]['end'] = [x_end_pt, y_end_pt, theta + alpha]
+        xx, yy, theta1 = create_spline(0,0,theta*(PI/180), x_end_pt, y_end_pt, (theta+alpha)*(PI/180))
+        # print(len(xx), len(yy), len(path_start_theta.tolist()))
+        mprims = [xx,yy, theta1]
         data[idx]['mprim'] = mprims
         data[idx]['collisions'] = []
 
@@ -100,17 +148,30 @@ def generate_mprims_angle(theta, num_prims = NUM_PRIMS, fineness = RESOLUTION):
         mprims = [path_start_x.tolist(), path_start_y.tolist(), path_start_theta.tolist()]
 
 
-        x_end = int((path_start_x[-1] - GRID_SIZE / 2) / GRID_SIZE)
-        y_end = int((path_start_y[-1] - GRID_SIZE / 2) / GRID_SIZE)
+        # x_end = int((path_start_x[-1] - GRID_SIZE / 2) / GRID_SIZE)
+        # y_end = int((path_start_y[-1] - GRID_SIZE / 2) / GRID_SIZE)
+
+        x_end = int((path_start_x[-1] + GRID_SIZE / 2) / GRID_SIZE)
+        y_end = int((path_start_y[-1] + GRID_SIZE / 2) / GRID_SIZE)
+        if path_start_x[-1] + GRID_SIZE / 2 < 0:
+            x_end -= 1
+        if path_start_y[-1] + GRID_SIZE / 2 < 0:
+            y_end -= 1
+
+        x_end_pt = x_end * GRID_SIZE
+        y_end_pt = y_end * GRID_SIZE
 
         data[idx] = dict()
         data[idx]['start'] = [0, 0, theta]
-        data[idx]['end'] = [x_end, y_end, theta + alpha]
+        data[idx]['end'] = [x_end_pt, y_end_pt, theta + alpha]
+        xx, yy, theta1 = create_spline(0,0,theta*(PI/180), x_end_pt, y_end_pt, (theta+alpha)*(PI/180))
+        # print(len(xx), len(yy), len(path_start_theta.tolist()))
+        mprims = [xx,yy, theta1]
         data[idx]['mprim'] = mprims
         data[idx]['collisions'] = []
 
         idx += 1
-
+    # print("data: \n", data)
     return data
 
 def generate_mprims():
@@ -143,7 +204,7 @@ if __name__ == "__main__":
     with open('mprims.json', 'w') as fp:
         json.dump(all_mprims, fp)
 
-    # Save the configuration
+    # Save the configuration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
     with open(('mprims_config.json'), 'w') as fp:
         json.dump(config_mprims, fp)
     
