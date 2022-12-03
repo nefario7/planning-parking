@@ -15,18 +15,9 @@ using namespace std;
 Planner::Planner(Environment env) {
     this->env = env;
 
-    //! Get start and goal from the environment
-    // this->start_point = Point(43, 10, 0);
-    this->start_point = Point(600, 10, 180);
-    // this->start_point = Point(200, 205, 180);
-    // this->goal_point = Point(358, 99, 45);
-    // this->goal_point = Point(43, 10, 180);
-    this->goal_point = Point(600, 10, 90);
-    // this->goal_point = Point(200, 205, 90);
-
-    if (!env.is_open(43, 10) && !env.is_open(360, 100)) {
-        throw runtime_error("BC sahi points do!");
-    }
+    // Get start and goal from the environment
+    this->start_point = env.start_point;
+    this->goal_point = env.goal_point;
 
     // Get start and goal idx
     this->start_idx = get_index(start_point);
@@ -63,7 +54,7 @@ void Planner::search() {
         Node curr_node = graph.nodes_map[curr_idx];
 
         Point p = get_xytheta(curr_idx);
-        if (goal_reached(p, 1, 1, 0)){
+        if (goal_reached(p, 1, 1, 0)) {
             cout << "Fuck man, I have reached the goal!" << endl;
             cout << p.theta << endl;
             goal_idx = curr_idx;
@@ -84,8 +75,7 @@ void Planner::search() {
 
     if (in_closed(goal_idx))
         cout << "Found a plan \n";
-    else
-    {
+    else {
         cout << "Nodes expanded = " << expansions;
         printf("No plan found \n");
     }
@@ -135,11 +125,11 @@ double Planner::get_heuristic(Point& curr_point, const string& method) const {
 
 bool Planner::goal_reached(Point& curr_point, const int& delta_x = 1, const int& delta_y = 1, const double& delta_theta = 22.5) {
 
-    if(abs(curr_point.x - goal_point.x) <= delta_x && abs(curr_point.y - goal_point.y) <= delta_y 
+    if (abs(curr_point.x - goal_point.x) <= delta_x && abs(curr_point.y - goal_point.y) <= delta_y
         && abs(curr_point.theta - goal_point.theta) <= delta_theta) {
         return true;
     }
-    
+
     return false;
 }
 
@@ -147,12 +137,12 @@ double Planner::step_cost(int idx) {
     return 1.0;
 }
 
-int Planner::get_index(const Point &p) const {
+int Planner::get_index(const Point& p) const {
     // cout << "size theta = " << env.size_theta << endl;
     return GETXYTINDEX(p.x, p.y, p.theta, env.size_x, env.size_theta, env.disc_theta);
 }
 
-Point Planner::get_xytheta(const int &idx) const {
+Point Planner::get_xytheta(const int& idx) const {
     Point p;
     p.x = GETXFROMINDEX(idx, env.size_x, env.size_theta, env.disc_theta);
     p.y = GETYFROMINDEX(idx, env.size_x, env.size_theta, env.disc_theta);
@@ -196,7 +186,7 @@ void Planner::expand_node(const int& idx) {
             }
         }
 
-        if (!collision) {
+        if (!collision && is_valid_cell(curr_point.x + primitive.end.x, curr_point.y + primitive.end.y)) {
             Point new_point(curr_point.x + primitive.end.x, curr_point.y + primitive.end.y, primitive.end.theta);
             int new_idx = get_index(new_point);
 
@@ -206,7 +196,7 @@ void Planner::expand_node(const int& idx) {
                 graph.nodes_map[new_idx].g = graph.nodes_map[idx].g + step_cost(primitive.idx);
                 graph.nodes_map[new_idx].h = get_heuristic(new_point, "euclidean2D");
                 graph.nodes_map[new_idx].parent_idx = idx;
-                if (idx < 0){
+                if (idx < 0) {
                     cout << "Parent Index = " << idx << endl;
                     throw runtime_error("Negative Index!");
                 }

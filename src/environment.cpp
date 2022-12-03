@@ -11,6 +11,14 @@
 using namespace std;
 using namespace rapidjson;
 
+Environment::Environment() {}
+
+Environment::Environment(Point start, Point goal, float disc_theta) {
+    start_point = start;
+    goal_point = goal;
+    this->disc_theta = disc_theta;
+}
+
 void Environment::create_map(string file_name) {
     ifstream input_file;
     input_file.open(file_name, ios::in);
@@ -19,6 +27,7 @@ void Environment::create_map(string file_name) {
         cout << "Error opening file" << endl;
         return;
     }
+
     cout << "Creating map from : " << file_name << endl;
     string line = "";
 
@@ -40,34 +49,27 @@ void Environment::create_map(string file_name) {
 
     size_x = map.size();
     size_y = map[0].size();
-    size_theta = (int) (360 / disc_theta);
-    cout << "disc theta = " << disc_theta << endl;
-    cout << "map sizes = " << size_x << " " << size_y << " " << size_theta << endl;
+    size_theta = (int)(360 / disc_theta);
+
+    cout << "Map Sizes = " << size_x << " " << size_y << " " << size_theta << endl;
 }
 
-bool Environment::is_obstacle(int a, int b) {
+bool Environment::is_obstacle(const int& a, const int& b) const {
     if (map[a][b] == 1)
         return true;
-    else
-        return false;
+    return false;
 }
 
-bool Environment::is_open(int a, int b) {
-    if (map[a][b] == 0) {
+bool Environment::is_openspace(const int& a, const int& b) const {
+    if (map[a][b] == 0)
         return true;
-    }
-    else {
-        return false;
-    }
+    return false;
 }
 
-bool Environment::is_unknown(int a, int b) {
-    if (map[a][b] == -1) {
+bool Environment::is_unknown(const int& a, const int& b) const {
+    if (map[a][b] == -1)
         return true;
-    }
-    else {
-        return false;
-    }
+    return false;
 }
 
 void Environment::create_primitives(const string file_name) {
@@ -79,7 +81,7 @@ void Environment::create_primitives(const string file_name) {
         return;
     }
 
-    cout << "Create primitives called \n";
+    cout << "Loading primitives from : " << file_name << endl;
 
     // Read json with rapidjson and store primitives in a map
     IStreamWrapper isw(input_file);
@@ -136,6 +138,16 @@ void Environment::create_primitives(const string file_name) {
 
         primitives_map.insert(make_pair(angle, primitive_list));
     }
+}
+
+bool Environment::check_start_goal() {
+    if (!is_openspace(start_point.x, start_point.y))
+        throw runtime_error("Invalid start point, point not in open space!");
+
+    if (!is_openspace(goal_point.x, goal_point.y))
+        throw runtime_error("Invalid goal point, point not in open space!");
+
+    return true;
 }
 
 // int main() {

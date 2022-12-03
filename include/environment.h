@@ -26,12 +26,21 @@ public:
     // Primitives data
     unordered_map<double, std::vector<Primitive>> primitives_map;
 
+    Environment();
+
+    Environment(Point start, Point goal, float disc_theta);
+
     void create_map(std::string filename);
-    bool is_obstacle(int a, int b);
-    bool is_open(int a, int b);
-    bool is_unknown(int a, int b);
+
+    bool is_obstacle(const int& a, const int& b) const;
+
+    bool is_openspace(const int& a, const int& b) const;
+
+    bool is_unknown(const int& a, const int& b) const;
 
     void create_primitives(std::string filename);
+
+    bool check_start_goal();
 
 };
 
