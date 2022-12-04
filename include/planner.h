@@ -38,7 +38,7 @@ private:
 
     int get_index(const Point& p) const;
 
-    Point get_xytheta(const int &idx) const;
+    Point get_xytheta(const int& idx) const;
 
     void expand_node(const int& idx);
 

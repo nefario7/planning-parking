@@ -8,6 +8,7 @@
 
 #include "../include/planner.h"
 #include "../include/data.h"
+#include "../include/dubins.h"
 
 using namespace std;
 
@@ -118,8 +119,14 @@ bool Planner::in_closed(const int& idx) const {
 double Planner::get_heuristic(Point& curr_point, const string& method) const {
     if (method == "euclidean2D")
         return sqrt(pow(curr_point.x - goal_point.x, 2) + pow(curr_point.y - goal_point.y, 2));
-    else if (method == "euclidean3D")
-        return sqrt(pow(curr_point.x - goal_point.x, 2) + pow(curr_point.y - goal_point.y, 2) + pow(curr_point.theta - goal_point.theta, 2));
+    else if (method == "dubins") {
+        double curr[] = { curr_point.x, curr_point.y, curr_point.theta };
+        double goal[] = { goal_point.x, goal_point.y, goal_point.theta };
+        DubinsPath path;
+        dubins_shortest_path(&path, curr, goal, 1.6);
+        return path.param[0] + path.param[1] + path.param[2];;
+    }
+
     return 0;
 }
 
@@ -190,7 +197,7 @@ void Planner::expand_node(const int& idx) {
 
             if (graph.nodes_map[new_idx].g > graph.nodes_map[idx].g + primitive.cost) {
                 graph.nodes_map[new_idx].g = graph.nodes_map[idx].g + primitive.cost;
-                graph.nodes_map[new_idx].h = get_heuristic(new_point, "euclidean2D");
+                graph.nodes_map[new_idx].h = get_heuristic(new_point, "dubins");
                 graph.nodes_map[new_idx].parent_idx = idx;
                 if (idx < 0) {
                     cout << "Parent Index = " << idx << endl;
