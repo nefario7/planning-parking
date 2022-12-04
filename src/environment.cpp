@@ -200,7 +200,7 @@ void Environment::create_primitives(const string file_name) {
         const Value& primitives = d[key.c_str()];
 
         vector<Primitive> primitive_list;
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 10; i++) {
             string s = to_string(i);
             const Value& p = primitives[s.c_str()];
             const Value& start = p["start"];

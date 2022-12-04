@@ -10,8 +10,9 @@ using namespace std;
 
 // FILEPATHS
 string BASE_MAP_CSV = "./scripts/mit_base_map.csv";
-string PRIMITIVES_JSON = "./python/mprims_dubin.json";
+string PRIMITIVES_JSON = "./python/mprims_dubin_updated.json";
 string WAYPOINT_TXT = "./waypoints/mit_base_map_wp.txt";
+string ROBOTPOINT_TXT = "./waypoints/mit_base_map_rp.txt";
 
 // CONFIGURATION
 float DISC_THETA = 22.5;
@@ -52,7 +53,9 @@ int main() {
 
     cout << "----------- Waypoints -----------" << endl;
     // Print the path
-    vector<Point> waypoints = fap_planner.get_robot_points();
+    vector<Point> waypoints;
+    vector<Point> robot_points;
+    fap_planner.get_robot_points(waypoints, robot_points);
 
     ofstream output_file;
     output_file.open(WAYPOINT_TXT, ios::out);
@@ -61,7 +64,15 @@ int main() {
         output_file << i << "," << waypoints[i].x << "," << waypoints[i].y << "," << waypoints[i].theta << endl;
     }
 
+    ofstream output_file_rp;
+    output_file_rp.open(ROBOTPOINT_TXT, ios::out);
+
+    for (unsigned int i = 0; i < robot_points.size(); i++) {
+        output_file_rp << i << "," << robot_points[i].x << "," << robot_points[i].y << "," << robot_points[i].theta << endl;
+    }
+
     output_file.close();
+    output_file_rp.close();
 
     return 0;
 }

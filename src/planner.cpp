@@ -55,7 +55,7 @@ void Planner::search() {
 
         Point p = get_xytheta(curr_idx);
         if (goal_reached(p, 0, 0, 0)) {
-            cout << "Fuck yeah, I have reached the goal!" << endl;
+            cout << "I have reached the goal!" << endl;
             goal_idx = curr_idx;
         }
 
@@ -96,14 +96,32 @@ void Planner::backtrack() {
     return;
 }
 
-vector<Point> Planner::get_robot_points() {
-    cout << "Getting robot points..." << endl;
+void Planner::get_robot_points(vector<Point>& grid_points, vector<Point>& robot_points) {
+    cout << "Getting waypoints..." << endl;
     for (int i = 0; i < path.size(); i++) {
         int idx = path[i];
-        robot_points.push_back(graph.nodes_map[idx].p);
+        grid_points.push_back(graph.nodes_map[idx].p);
     }
 
-    return robot_points;
+    cout << "Getting robot points..." << endl;
+    for (int i = 1; i < path.size(); i++) {
+        int idx = path[i];
+        int p_idx = graph.nodes_map[idx].parent_idx;
+        Point p = get_xytheta(p_idx);
+        vector<Primitive> prims = env.primitives_map[p.theta];
+        // cout << "Got primitives, idx = " << graph.nodes_map[idx].primitive_idx << endl;
+        Primitive prim = prims[graph.nodes_map[idx].primitive_idx];
+        for (Point p_prim : prim.primitive_points) {
+            // Wrap to pi needed??
+            p_prim.x /= 0.2;
+            p_prim.y /= 0.2;
+            p_prim.theta /= 0.2;
+            p_prim.x += p.x;
+            p_prim.y += p.y;
+            p_prim.theta += p.theta;
+            robot_points.push_back(p_prim);
+        }
+    }
 }
 
 // Private methods
@@ -180,7 +198,10 @@ void Planner::expand_node(const int& idx) {
     // cout << "expanding " << idx << endl;
 
     // Get the primitives for the current angle
-    if (env.primitives_map.find(curr_point.theta) == env.primitives_map.end()) {
+    double theta_temp = (int)(curr_point.theta * 100 + .5);
+    theta_temp = (double) theta_temp / 100;
+
+    if (env.primitives_map.find(theta_temp) == env.primitives_map.end()) {
         printf("Angle does not exist in primitives \n");
         printf("Current theta is %f \n", curr_point.theta);
         throw runtime_error("Angle does not exist in primitives");
@@ -217,6 +238,9 @@ void Planner::expand_node(const int& idx) {
                     throw runtime_error("Negative Index!");
                 }
                 graph.nodes_map[new_idx].primitive_idx = primitive.idx;
+                if (primitive.idx < 0) {
+                    cout << "WARNING: Primitive is < 0 : " << primitive.idx << endl;
+                }
 
                 open.push(make_pair(graph.nodes_map[new_idx].get_f(), new_idx));
             }
