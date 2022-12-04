@@ -96,7 +96,7 @@ def plot_path():
     map_arr = np.loadtxt("mit_base_map.csv",
                     delimiter=",", dtype=int)
 
-    way_points = np.loadtxt("mit_base_map_wp_turn2.txt", delimiter=",", dtype=float)
+    way_points = np.loadtxt("mit_base_map_wp_l_turn.txt", delimiter=",", dtype=float)
     coords = way_points[:,1:3]
     thetas = way_points[:,-1]
     thetas = np.deg2rad(thetas)
