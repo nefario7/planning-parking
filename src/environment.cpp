@@ -1,4 +1,8 @@
+#include <queue>
+#include <unordered_set>
+#include <vector>
 #include <cmath>
+#include <cfloat>
 
 #include "../include/environment.h"
 #include "../include/data.h"
@@ -8,8 +12,20 @@
 
 #include "../include/rapidjson/istreamwrapper.h"
 
+int dX[NUMOFDIRS] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+int dY[NUMOFDIRS] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+double cost[NUMOFDIRS] = { sqrt(0.2), 0.2, sqrt(0.2), 0.2, 0.2, sqrt(0.2), 0.2, sqrt(0.2) };
+
 using namespace std;
 using namespace rapidjson;
+
+struct HNode {
+    int x, y;
+    double g = FLT_MAX;
+
+    HNode() {}
+    HNode(int x, int y, double g) : x(x), y(y), g(g) {}
+};
 
 Environment::Environment() {}
 
@@ -73,20 +89,85 @@ bool Environment::is_unknown(const int& a, const int& b) const {
 }
 
 double Environment::get_cost(const int& idx) const {
-    switch(idx) {
-        case 0:
-        case 4:
-            return 2.0;
-        case 1:
-        case 3:
-            return 1.5;
-        case 2:
-        case 5:
-        case 6:
-            return 1.0;
+    switch (idx) {
+    case 0:
+    case 4:
+        return 2.0;
+    case 1:
+    case 3:
+        return 1.5;
+    case 2:
+    case 5:
+    case 6:
+        return 1.0;
     }
     throw runtime_error("Cost doesn't map to an index");
     return 1.0;
+}
+
+void Environment::compute_dijkstra_costmap() {
+    unordered_map <int, HNode> cell_map;
+
+    priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> open;
+
+    int goal_idx = GETMAPINDEX(goal_point.x, goal_point.y, size_x);
+    cell_map.insert(make_pair(goal_idx, HNode(goal_point.x, goal_point.y, 0)));
+    open.push(make_pair(0, goal_idx));
+
+    while (!open.empty()) {
+        int current_idx = open.top().second;
+        open.pop();
+
+        for (int i = 0; i < NUMOFDIRS; i++) {
+            int new_x = GETXFROM2DINDEX(current_idx, size_x) + dX[i];
+            int new_y = GETYFROM2DINDEX(current_idx, size_x) + dY[i];
+
+            if (new_x < 0 || new_x >= size_x || new_y < 0 || new_y >= size_y)
+                continue;
+
+            if (is_obstacle(new_x, new_y) || is_unknown(new_x, new_y))
+                continue;
+
+            int new_idx = GETMAPINDEX(new_x, new_y, size_x);
+
+            double new_g = cell_map[current_idx].g + cost[i];
+
+            if (cell_map.find(new_idx) == cell_map.end()) {
+                cell_map.insert(make_pair(new_idx, HNode(new_x, new_y, new_g)));
+                open.push(make_pair(new_g, new_idx));
+            }
+            else if (new_g < cell_map[new_idx].g) {
+                cell_map[new_idx].g = new_g;
+                open.push(make_pair(new_g, new_idx));
+            }
+
+            dijkstra_costmap.insert(make_pair(new_idx, new_g));
+        }
+    }
+
+    // Save the costmap to a csv file
+    // ofstream output_file;
+    // output_file.open("costmap.csv", ios::out);
+
+    // if (!output_file.is_open()) {
+    //     cout << "Error opening file" << endl;
+    //     return;
+    // }
+
+    // for (int i = 0; i < size_x; i++) {
+    //     for (int j = 0; j < size_y; j++) {
+    //         int idx = GETMAPINDEX(i, j, size_x);
+    //         if (dijkstra_costmap.find(idx) != dijkstra_costmap.end()) {
+    //             output_file << dijkstra_costmap[idx] << ',';
+    //         }
+    //         else {
+    //             output_file << -1 << ',';
+    //         }
+    //     }
+    //     output_file << endl;
+    // }
+
+    // output_file.close();
 }
 
 void Environment::create_primitives(const string file_name) {
@@ -154,13 +235,15 @@ void Environment::create_primitives(const string file_name) {
                 prim_cells,
                 i,
                 cost
-                };
+            };
 
             primitive_list.push_back(prim);
         }
 
         primitives_map.insert(make_pair(angle, primitive_list));
     }
+
+    compute_dijkstra_costmap();
 }
 
 bool Environment::check_start_goal() {

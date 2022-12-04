@@ -32,7 +32,11 @@ private:
 
     bool in_closed(const int& idx) const;
 
-    double get_heuristic(Point& curr_point, const string& method) const;
+    double get_dubins_cost(const Point& curr_point) const;
+
+    double get_dijkstra_cost(const Point& curr_point) const;
+
+    double get_heuristic(const Point& curr_point, const string& method) const;
 
     bool goal_reached(Point& curr_point, const int& delta_x, const int& delta_y, const double& delta_theta);
 

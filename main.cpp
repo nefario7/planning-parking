@@ -33,12 +33,14 @@ int main() {
     // Read the configuration file
     //! Need to do this
 
+    cout << "----------- Environment -----------" << endl;
     // Get the map data
     Environment m(START, GOAL, DISC_THETA);
     m.create_map(BASE_MAP_CSV);
     m.create_primitives(PRIMITIVES_JSON);
     m.check_start_goal();
 
+    cout << "----------- Planner -----------" << endl;
     // Create a planner passing the map data
     Planner fap_planner(m);
 
@@ -48,21 +50,18 @@ int main() {
     // Backtrack the path
     fap_planner.backtrack();
 
+    cout << "----------- Waypoints -----------" << endl;
     // Print the path
     vector<Point> waypoints = fap_planner.get_robot_points();
 
     ofstream output_file;
     output_file.open(WAYPOINT_TXT, ios::out);
-
-    cout << "Waypoints" << endl;
     for (unsigned int i = 0; i < waypoints.size(); i++) {
         cout << i << " : " << waypoints[i].x << ", " << waypoints[i].y << ", " << waypoints[i].theta << endl;
         output_file << i << "," << waypoints[i].x << "," << waypoints[i].y << "," << waypoints[i].theta << endl;
     }
 
     output_file.close();
-
-
 
     return 0;
 }

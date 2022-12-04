@@ -2,8 +2,6 @@
 
 #include "../include/graph.h"
 
-#define WEIGHT 1.0
-
 using namespace std;
 
 Node::Node(Point p, double g, double h, int parent_idx, int primitive_idx) {
