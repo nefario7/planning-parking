@@ -24,13 +24,12 @@ Planner::Planner(Environment env) {
     this->start_idx = get_index(start_point);
     this->goal_idx = get_index(goal_point);
 
-    cout << "Idxs start " << start_idx << " goal " << goal_idx << endl;
-
+    // cout << "Idxs start " << start_idx << " goal " << goal_idx << endl;
 
     // Add start state to the graph
     graph.add_node(start_idx, start_point);
     graph.nodes_map[start_idx].g = 0.0;
-    graph.nodes_map[start_idx].h = get_heuristic(start_point, "euclidean2D");
+    graph.nodes_map[start_idx].h = get_heuristic(start_point, HEURISTIC_METHOD);
 
     // Add goal state to the graph
     graph.add_node(goal_idx, goal_point);
@@ -39,7 +38,7 @@ Planner::Planner(Environment env) {
 }
 
 void Planner::search() {
-    cout << "Running Weighted A* search..." << endl;
+    cout << "\nRunning Weighted A* search..." << endl;
 
     // Add start state to the open list
     open.push(make_pair(graph.nodes_map[start_idx].get_f(), start_idx));
@@ -56,8 +55,7 @@ void Planner::search() {
 
         Point p = get_xytheta(curr_idx);
         if (goal_reached(p, 0, 0, 0)) {
-            cout << "Fuck man, I have reached the goal!" << endl;
-            cout << p.theta << endl;
+            cout << "Fuck yeah, I have reached the goal!" << endl;
             goal_idx = curr_idx;
         }
 
@@ -74,17 +72,17 @@ void Planner::search() {
         }
     }
 
+    cout << "Total Nodes expanded = " << expansions << endl;
+
     if (in_closed(goal_idx))
-        cout << "Found a plan \n";
-    else {
-        cout << "Nodes expanded = " << expansions;
-        printf("No plan found \n");
-    }
+        cout << "Found a plan" << endl;
+    else
+        cout << "No plan found" << endl;
     return;
 }
 
 void Planner::backtrack() {
-    cout << "Backtracking..." << endl;
+    cout << "\nBacktracking..." << endl;
     int curr_idx = goal_idx;
 
     while (curr_idx != start_idx) {
@@ -116,15 +114,30 @@ bool Planner::in_closed(const int& idx) const {
     return true;
 }
 
-double Planner::get_heuristic(Point& curr_point, const string& method) const {
+double Planner::get_dubins_cost(const Point& curr_point) const {
+    double curr[] = { curr_point.x, curr_point.y, curr_point.theta };
+    double goal[] = { goal_point.x, goal_point.y, goal_point.theta };
+    DubinsPath path;
+    dubins_shortest_path(&path, curr, goal, 1.6);
+    return path.param[0] + path.param[1] + path.param[2];;
+}
+
+double Planner::get_dijkstra_cost(const Point& curr_point) const {
+    int curr_idx = GETMAPINDEX(curr_point.x, curr_point.y, env.size_x);
+    return env.dijkstra_costmap.at(curr_idx);
+}
+
+double Planner::get_heuristic(const Point& curr_point, const string& method) const {
     if (method == "euclidean2D")
         return sqrt(pow(curr_point.x - goal_point.x, 2) + pow(curr_point.y - goal_point.y, 2));
     else if (method == "dubins") {
-        double curr[] = { curr_point.x, curr_point.y, curr_point.theta };
-        double goal[] = { goal_point.x, goal_point.y, goal_point.theta };
-        DubinsPath path;
-        dubins_shortest_path(&path, curr, goal, 1.6);
-        return path.param[0] + path.param[1] + path.param[2];;
+        return get_dubins_cost(curr_point);
+    }
+    else if (method == "dijkstra") {
+        return get_dijkstra_cost(curr_point);
+    }
+    else if (method == "combined") {
+        return max(get_dubins_cost(curr_point), get_dijkstra_cost(curr_point));
     }
 
     return 0;
@@ -197,7 +210,7 @@ void Planner::expand_node(const int& idx) {
 
             if (graph.nodes_map[new_idx].g > graph.nodes_map[idx].g + primitive.cost) {
                 graph.nodes_map[new_idx].g = graph.nodes_map[idx].g + primitive.cost;
-                graph.nodes_map[new_idx].h = get_heuristic(new_point, "dubins");
+                graph.nodes_map[new_idx].h = get_heuristic(new_point, HEURISTIC_METHOD);
                 graph.nodes_map[new_idx].parent_idx = idx;
                 if (idx < 0) {
                     cout << "Parent Index = " << idx << endl;
