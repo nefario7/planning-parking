@@ -113,12 +113,12 @@ void Planner::get_robot_points(vector<Point>& grid_points, vector<Point>& robot_
         Primitive prim = prims[graph.nodes_map[idx].primitive_idx];
         for (Point p_prim : prim.primitive_points) {
             // Wrap to pi needed??
-            p_prim.x /= 0.2;
-            p_prim.y /= 0.2;
-            p_prim.theta /= 0.2;
-            p_prim.x += p.x;
-            p_prim.y += p.y;
-            p_prim.theta += p.theta;
+            // p_prim.x /= 0.2;
+            // p_prim.y /= 0.2;
+            // p_prim.theta /= 0.2;
+            p_prim.x += p.x * 0.2;
+            p_prim.y += p.y * 0.2;
+            p_prim.theta = p.theta;
             robot_points.push_back(p_prim);
         }
     }

@@ -10,7 +10,7 @@ using namespace std;
 
 // FILEPATHS
 string BASE_MAP_CSV = "./scripts/mit_base_map.csv";
-string PRIMITIVES_JSON = "./python/mprims_dubin_updated.json";
+string PRIMITIVES_JSON = "./python/mprims_dubin.json";
 string WAYPOINT_TXT = "./waypoints/mit_base_map_wp.txt";
 string ROBOTPOINT_TXT = "./waypoints/mit_base_map_rp.txt";
 
@@ -66,6 +66,13 @@ int main() {
 
     ofstream output_file_rp;
     output_file_rp.open(ROBOTPOINT_TXT, ios::out);
+
+    for (unsigned int i = 0; i < robot_points.size(); i++) {
+        output_file_rp << i << "," << robot_points[i].x << "," << robot_points[i].y << "," << robot_points[i].theta << endl;
+    }
+
+    output_file.close();
+    output_file_rp.close();
 
     for (unsigned int i = 0; i < robot_points.size(); i++) {
         output_file_rp << i << "," << robot_points[i].x << "," << robot_points[i].y << "," << robot_points[i].theta << endl;
