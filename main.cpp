@@ -18,7 +18,7 @@ float DISC_THETA = 22.5;
 
 // INPUTS
 Point START(600, 10, 180);
-Point GOAL(600, 10, 0);
+Point GOAL(200, 187, 0);
 
 // this->start_point = Point(43, 10, 0);
 // this->start_point = Point(600, 10, 180);

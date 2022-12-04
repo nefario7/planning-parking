@@ -37,4 +37,5 @@ struct Primitive {
     vector<Point> primitive_points;
     vector<Cell> collision_cells;
     int idx;
+    double cost;
 };

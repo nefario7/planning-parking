@@ -38,6 +38,8 @@ public:
 
     bool is_unknown(const int& a, const int& b) const;
 
+    double get_cost(const int& idx) const;
+
     void create_primitives(std::string filename);
 
     bool check_start_goal();

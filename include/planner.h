@@ -17,8 +17,6 @@ class Planner {
 private:
     Graph graph;
     Environment env;
-    // vector<vector<int>> map;
-    // unordered_map<double, vector<Primitive>> primitives_map;    // robot_angle : vector<Primitive>
 
     // Start and goal points
     int start_idx, goal_idx;
@@ -37,8 +35,6 @@ private:
     double get_heuristic(Point& curr_point, const string& method) const;
 
     bool goal_reached(Point& curr_point, const int& delta_x, const int& delta_y, const double& delta_theta);
-
-    double step_cost(int idx);
 
     int get_index(const Point& p) const;
 

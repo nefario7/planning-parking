@@ -9,8 +9,8 @@ from tqdm import tqdm
 
 disc = 0.2 #Grid size
 
-l = 0.79 #Length of car
-w = 0.59 #Width of car
+l = 0.9 #Length of car
+w = 0.7 #Width of car
 
 n1 = 101 #Discretization size along car boundary  
 n2 = 101 #Discretization size along car interior

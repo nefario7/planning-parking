@@ -1,7 +1,7 @@
 CXX := g++
 objects := planner.o environment.o graph.o
 
-all: main
+all: clean main
 
 main: main.o $(objects)
 	$(CXX) -o main main.o $(objects) -o safeparking

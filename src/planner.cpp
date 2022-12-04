@@ -54,7 +54,7 @@ void Planner::search() {
         Node curr_node = graph.nodes_map[curr_idx];
 
         Point p = get_xytheta(curr_idx);
-        if (goal_reached(p, 1, 1, 0)) {
+        if (goal_reached(p, 0, 0, 0)) {
             cout << "Fuck man, I have reached the goal!" << endl;
             cout << p.theta << endl;
             goal_idx = curr_idx;
@@ -133,10 +133,6 @@ bool Planner::goal_reached(Point& curr_point, const int& delta_x = 1, const int&
     return false;
 }
 
-double Planner::step_cost(int idx) {
-    return 1.0;
-}
-
 int Planner::get_index(const Point& p) const {
     // cout << "size theta = " << env.size_theta << endl;
     return GETXYTINDEX(p.x, p.y, p.theta, env.size_x, env.size_theta, env.disc_theta);
@@ -192,8 +188,8 @@ void Planner::expand_node(const int& idx) {
 
             graph.add_node(new_idx, new_point);
 
-            if (graph.nodes_map[new_idx].g > graph.nodes_map[idx].g + step_cost(primitive.idx)) {
-                graph.nodes_map[new_idx].g = graph.nodes_map[idx].g + step_cost(primitive.idx);
+            if (graph.nodes_map[new_idx].g > graph.nodes_map[idx].g + primitive.cost) {
+                graph.nodes_map[new_idx].g = graph.nodes_map[idx].g + primitive.cost;
                 graph.nodes_map[new_idx].h = get_heuristic(new_point, "euclidean2D");
                 graph.nodes_map[new_idx].parent_idx = idx;
                 if (idx < 0) {

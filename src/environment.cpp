@@ -72,6 +72,23 @@ bool Environment::is_unknown(const int& a, const int& b) const {
     return false;
 }
 
+double Environment::get_cost(const int& idx) const {
+    switch(idx) {
+        case 0:
+        case 4:
+            return 2.0;
+        case 1:
+        case 3:
+            return 1.5;
+        case 2:
+        case 5:
+        case 6:
+            return 1.0;
+    }
+    throw runtime_error("Cost doesn't map to an index");
+    return 1.0;
+}
+
 void Environment::create_primitives(const string file_name) {
     ifstream input_file;
     input_file.open(file_name, ios::in);
@@ -128,12 +145,18 @@ void Environment::create_primitives(const string file_name) {
                 prim_cells.push_back(temp_cell);
             }
 
-            primitive_list.push_back(Primitive{
+            double cost = get_cost(i);
+
+            Primitive prim = Primitive{
                 Point{start[0].GetDouble(), start[1].GetDouble(), start[2].GetDouble()},
                 Point{end[0].GetDouble(), end[1].GetDouble(), end[2].GetDouble()},
                 prim_points,
-                prim_cells
-                });
+                prim_cells,
+                i,
+                cost
+                };
+
+            primitive_list.push_back(prim);
         }
 
         primitives_map.insert(make_pair(angle, primitive_list));
