@@ -26,6 +26,9 @@ public:
     // Primitives data
     unordered_map<double, std::vector<Primitive>> primitives_map;
 
+    // Dijkstra Costs
+    unordered_map<int, double> dijkstra_costmap;
+
     Environment();
 
     Environment(Point start, Point goal, float disc_theta);
@@ -39,6 +42,8 @@ public:
     bool is_unknown(const int& a, const int& b) const;
 
     double get_cost(const int& idx) const;
+
+    void compute_dijkstra_costmap();
 
     void create_primitives(std::string filename);
 
