@@ -1,0 +1,6 @@
+name: traversability
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pdal=2.4.2=he35911a_1
