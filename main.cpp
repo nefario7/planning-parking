@@ -63,7 +63,7 @@ int main() {
     // Print the path
     vector<Point> waypoints;
     vector<Point> robot_points;
-    fap_planner.get_robot_points(waypoints, robot_points, MIN_X - 1, MIN_Y - 1);
+    fap_planner.get_robot_points(waypoints, robot_points, MIN_X + 1, MIN_Y + 1);
 
     ofstream output_file;
     output_file.open(WAYPOINT_TXT, ios::out);
