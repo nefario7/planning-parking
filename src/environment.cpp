@@ -14,7 +14,7 @@
 
 int dX[NUMOFDIRS] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 int dY[NUMOFDIRS] = { -1, 0, 1, -1, 1, -1, 0, 1 };
-double cost[NUMOFDIRS] = { sqrt(0.2), 0.2, sqrt(0.2), 0.2, 0.2, sqrt(0.2), 0.2, sqrt(0.2) };
+double cost[NUMOFDIRS] = { 0.2*sqrt(2), 0.2, 0.2*sqrt(2), 0.2, 0.2, 0.2*sqrt(2), 0.2, 0.2*sqrt(2) };
 
 using namespace std;
 using namespace rapidjson;
@@ -89,18 +89,26 @@ bool Environment::is_unknown(const int& a, const int& b) const {
 }
 
 double Environment::get_cost(const int& idx) const {
+    double backward_cost_mult = 1.0;
     switch(idx) {
         case 0:
-        case 4:
+        case 6:
             return 2.0;
         case 1:
-        case 3:
+        case 5:
             return 1.5;
         case 2:
             return 1.0;
-        case 5:
+        case 3:
             return 1.75;
-        case 6:
+        case 4:
+            return 3.0;
+        case 7:
+        case 9:
+            return 2.0 * backward_cost_mult;
+        case 8:
+            return 1.0 * backward_cost_mult;
+        default:
             return 3.0;
     }
     throw runtime_error("Cost doesn't map to an index");
@@ -202,7 +210,7 @@ void Environment::create_primitives(const string file_name) {
         const Value& primitives = d[key.c_str()];
 
         vector<Primitive> primitive_list;
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < NUMOFPRIMS; i++) {
             string s = to_string(i);
             const Value& p = primitives[s.c_str()];
             const Value& start = p["start"];

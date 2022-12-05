@@ -26,7 +26,7 @@ int MIN_Y = -17;
 // Point GOAL(190, 115, 45);
 
 // Point START(600, 10, 180);
-Point START(150, 10, 0);
+Point START(100, 10, 0);
 Point GOAL(200, 187, 180);
 
 // this->start_point = Point(43, 10, 0);
