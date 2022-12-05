@@ -89,19 +89,21 @@ bool Environment::is_unknown(const int& a, const int& b) const {
 }
 
 double Environment::get_cost(const int& idx) const {
-    // switch(idx) {
-    //     case 0:
-    //     case 4:
-    //         return 2.0;
-    //     case 1:
-    //     case 3:
-    //         return 1.5;
-    //     case 2:
-    //     case 5:
-    //     case 6:
-    //         return 1.0;
-    // }
-    // throw runtime_error("Cost doesn't map to an index");
+    switch(idx) {
+        case 0:
+        case 4:
+            return 2.0;
+        case 1:
+        case 3:
+            return 1.5;
+        case 2:
+            return 1.0;
+        case 5:
+            return 1.75;
+        case 6:
+            return 3.0;
+    }
+    throw runtime_error("Cost doesn't map to an index");
     return 1.0;
 }
 

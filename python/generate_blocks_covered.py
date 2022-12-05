@@ -9,8 +9,8 @@ from tqdm import tqdm
 
 disc = 0.2 #Grid size
 
-l = 0.9 #Length of car
-w = 0.7 #Width of car
+l = 1.01 #Length of car
+w = 0.81 #Width of car
 
 n1 = 101 #Discretization size along car boundary  
 n2 = 101 #Discretization size along car interior
@@ -118,7 +118,7 @@ if __name__ == "__main__":
             data[la][lp]['collisions'] = [primtive_covered_indices.T[0].tolist(),primtive_covered_indices.T[1].tolist()]
 
 
-    with open('mprims_dubin.json', 'w') as fp:
+    with open('mprims_dubin_101_81.json', 'w') as fp:
         json.dump(data, fp)
     
     # print(primtive_covered_indices_str)

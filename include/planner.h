@@ -55,5 +55,5 @@ public:
 
     void backtrack();
 
-    void get_robot_points(vector<Point>& grid_points, vector<Point>& robot_points);
+    void get_robot_points(vector<Point>& grid_points, vector<Point>& robot_points, const int& min_x, const int& min_y);
 };

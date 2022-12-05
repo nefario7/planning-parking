@@ -9,17 +9,25 @@
 using namespace std;
 
 // FILEPATHS
-string BASE_MAP_CSV = "./scripts/mit_base_map.csv";
+// string MAP_NAME = "b_level";
+string MAP_NAME = "mit_base";
+string BASE_MAP_CSV = "./maps/" + MAP_NAME +"_map.csv";
 string PRIMITIVES_JSON = "./python/mprims_dubin.json";
-string WAYPOINT_TXT = "./waypoints/mit_base_map_wp.txt";
-string ROBOTPOINT_TXT = "./waypoints/mit_base_map_rp.txt";
+string WAYPOINT_TXT = "./waypoints/" + MAP_NAME +"_map_wp.txt";
+string ROBOTPOINT_TXT = "/home/nambags/mmpug_ugv/" + MAP_NAME +"_map_rp.txt";
 
 // CONFIGURATION
 float DISC_THETA = 22.5;
+int MIN_X = -290;
+int MIN_Y = -17;
 
 // INPUTS
-Point START(600, 10, 180);
-Point GOAL(200, 187, 0);
+// Point START(190, 10, 157.5);
+// Point GOAL(190, 115, 45);
+
+// Point START(600, 10, 180);
+Point START(150, 10, 0);
+Point GOAL(200, 187, 180);
 
 // this->start_point = Point(43, 10, 0);
 // this->start_point = Point(600, 10, 180);
@@ -55,7 +63,7 @@ int main() {
     // Print the path
     vector<Point> waypoints;
     vector<Point> robot_points;
-    fap_planner.get_robot_points(waypoints, robot_points);
+    fap_planner.get_robot_points(waypoints, robot_points, MIN_X - 1, MIN_Y - 1);
 
     ofstream output_file;
     output_file.open(WAYPOINT_TXT, ios::out);

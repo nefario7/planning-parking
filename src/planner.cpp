@@ -96,7 +96,7 @@ void Planner::backtrack() {
     return;
 }
 
-void Planner::get_robot_points(vector<Point>& grid_points, vector<Point>& robot_points) {
+void Planner::get_robot_points(vector<Point>& grid_points, vector<Point>& robot_points, const int& min_x, const int& min_y) {
     cout << "Getting waypoints..." << endl;
     for (int i = 0; i < path.size(); i++) {
         int idx = path[i];
@@ -116,9 +116,9 @@ void Planner::get_robot_points(vector<Point>& grid_points, vector<Point>& robot_
             // p_prim.x /= 0.2;
             // p_prim.y /= 0.2;
             // p_prim.theta /= 0.2;
-            p_prim.x += p.x * 0.2;
-            p_prim.y += p.y * 0.2;
-            p_prim.theta = p.theta;
+            p_prim.x += (p.x + min_x )* 0.2;
+            p_prim.y += (p.y + min_y) * 0.2;
+            p_prim.theta *= 180 / M_PI;
             robot_points.push_back(p_prim);
         }
     }

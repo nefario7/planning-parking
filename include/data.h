@@ -15,7 +15,7 @@
 #define NUMOFDIRS 8
 
 #define HEURISTIC_METHOD "combined" // "euclidean", "dubins", "dijkstra", "combined"
-#define WEIGHT 1.0
+#define WEIGHT 0.0
 
 using namespace std;
 
@@ -26,10 +26,6 @@ struct Point {
 
     Point() {};
     Point(double x, double y, double theta) : x(x), y(y), theta(theta) {};
-
-    // void operator << (const Point& p) const {
-    //     cout << "x = " << p.x << ", y = " << p.y << ", theta = " << p.theta << endl;
-    // }
 };
 
 struct Cell {
