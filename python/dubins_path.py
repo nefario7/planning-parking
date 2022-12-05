@@ -12,6 +12,7 @@ import pathlib
 from math import sin, cos, atan2, sqrt, acos, pi, hypot
 import numpy as np
 import numpy as np
+from numpy import pi
 from scipy.spatial.transform import Rotation as Rot
 
 
@@ -482,12 +483,94 @@ def generate_dubin_points(start, end, min_turn_radius, curvature, step_size):
     return [path_x, path_y, path_yaw, sum(lengths)]
 
 
-# if __name__ == '__main__':    
-#     start_x = 0.0  # [m]
-#     start_y = 0.0  # [m]
-#     start_yaw = np.deg2rad(0)  # [rad]
+if __name__ == '__main__':    
+    start_x = 0.0  # [m]
+    start_y = 0.0  # [m]
+    # # start_yaw = np.deg2rad(67.5)  # [rad]
 
-#     end_x = 0.0 # [m]
-#     end_y = 3.0  # [m]
-#     end_yaw = np.deg2rad(180)  # [rad]
-#     generate_dubin_points([start_x, start_y, start_yaw], [end_x, end_y, end_yaw], 1.6, 0.1)
+    # end_x = 0.0 # [m]
+    # end_y = 3.0  # [m]
+    # end_yaw = np.deg2rad(180)  # [rad]
+    # generate_dubin_points([start_x, start_y, start_yaw], [end_x, end_y, end_yaw], 1.6, 0.1)
+    
+    # VALUES FOR 0 AS THETA START
+    x_vals_1 = [7.0,8.0,2.0,8.0,8.0,7.0]
+    y_vals_1 = [3.0,2.0,0.0,0.0,-2.0,-3.0]
+    theta_vals_1 = [45,22.5,0.0,0.0,-22.5,-45]
+    min_radius_vals_1 = [1.6,3.2,1.6,1.6,3.2,1.6]
+
+    # VALUES FOR 22.5 AS THETA START
+    x_vals_2 = [4.0,10.0,10.0,9.0,8.0,6.0]
+    y_vals_2 = [2.0,5.0,3.0,1.0,6.0,7.0]
+    theta_vals_2 = [22.5,22.5,0,-22.5,45,67.5]
+    min_radius_vals_2 = [1.6,1.6,3.2,1.6,3.2,1.6]
+
+    # # #values for 44.5 as THETA START
+    x_vals_3 = [2.0,6.0,6.0,7.0,4.0,3.0]
+    y_vals_3 = [2.0,6.0,4.0,3.0,6.0,7.0]
+    theta_vals_3 = [45.0,45.0,22.5,0,67.5,90]
+    min_radius_vals_3 = [1.6,1.6,3.2,1.6,3.2,1.6]
+
+    #  VALUES FOR 67.5 AS THETA START
+    y_vals_4 = [4.0,10.0,10.0,9.0,8.0,6.0]
+    x_vals_4 = [2.0,5.0,3.0,1.0,6.0,7.0]
+    theta_vals_4 = [67.5,67.5,90,112.5,45,22.5]
+    min_radius_vals_4 = [1.6,1.6,3.2,1.6,3.2,1.6]
+
+    x_vals = np.array([x_vals_1,x_vals_2,x_vals_3,x_vals_4])
+    y_vals = np.array([y_vals_1,y_vals_2,y_vals_3,y_vals_4])
+    theta_vals = np.array([theta_vals_1,theta_vals_2,theta_vals_3,theta_vals_4])
+    min_radius_vals = np.array([min_radius_vals_1,min_radius_vals_2,min_radius_vals_3,min_radius_vals_4])
+
+    start_angles = [0.0]#,22.5,45.0,67.5]
+
+    backward_angles_relative = [-pi/8,0.0,pi/8]
+    for k in range(0,1):#4):
+        rot_angle = (pi/2)*k
+        Rot_mat = np.array([[cos(rot_angle),-sin(rot_angle)],[sin(rot_angle),cos(rot_angle)]])
+        for j in range(0,len(start_angles)):
+            start_yaw = np.deg2rad(start_angles[j])+rot_angle
+            # print([start_x,start_y,start_yaw])
+            # print(start_yaw)
+            for i in range(0,len(x_vals[0])):
+                # print(i)
+                # e_x = Rot_mat*(x_vals[j][i]*0.2)
+                # e_y = Rot_mat*(y_vals[j][i]*0.2)
+
+                [e_x,e_y] = Rot_mat@np.array([x_vals[j][i]*0.2,y_vals[j][i]*0.2])
+
+                e_theta = np.deg2rad(theta_vals[j][i])+rot_angle
+               
+                rad = min_radius_vals[j][i]
+                [curr_x,  curr_y, curr_yaw, curr_s] = generate_dubin_points([start_x, start_y, start_yaw], [e_x, e_y, e_theta], rad, 1/rad,0.01)
+                print([start_x, start_y, pi+start_yaw], [e_x, e_y, pi+e_theta])
+
+                plt.scatter(curr_x, curr_y)
+                plot_arrow(start_x, start_y, start_yaw)
+                plot_arrow(e_x, e_y, e_theta)
+
+                for l in range(0,len(backward_angles_relative)):
+                    # print(np.rad2deg(e_theta-start_yaw), backward_angles_relative[l])
+                    if((e_theta-start_yaw) == backward_angles_relative[l]):
+                        Rot_mat_2 = np.array([[cos(pi),-sin(pi)],[sin(pi),cos(pi)]])
+                        [e_x_2,e_y_2] = Rot_mat_2@np.array([e_x,e_y])
+                        [curr_x,  curr_y, curr_yaw, curr_s] = generate_dubin_points([start_x, start_y, pi+start_yaw], [e_x_2, e_y_2, pi+e_theta], rad, 1/rad,0.01)
+                        # print("Start and end are : ")
+                        
+                        print([start_x, start_y, pi+start_yaw], [e_x_2, e_y_2, e_theta])
+                        plt.scatter(curr_x, curr_y)
+                        plot_arrow(start_x, start_y, start_yaw)
+                        plot_arrow(e_x_2, e_y_2, e_theta)
+
+
+
+            
+
+        # break
+
+    plt.legend()
+    plt.grid(True)
+    plt.axis("equal")
+    plt.show()
+
+    # generate_dubin_points([start_x, start_y, start_yaw], [end_x, end_y, end_yaw], 1.6, 0.1)
