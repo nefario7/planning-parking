@@ -258,10 +258,12 @@ void Environment::create_primitives(const string file_name) {
 
 bool Environment::check_start_goal() {
     if (!is_openspace(start_point.x, start_point.y))
-        throw runtime_error("Invalid start point, point not in open space!");
+        printf("Invalid start point, point not in open space!");
+        return false;
 
     if (!is_openspace(goal_point.x, goal_point.y))
-        throw runtime_error("Invalid goal point, point not in open space!");
+        printf("Invalid goal point, point not in open space!");
+        return false;
 
     return true;
 }

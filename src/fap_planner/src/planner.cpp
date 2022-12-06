@@ -37,7 +37,7 @@ Planner::Planner(Environment env) {
     graph.nodes_map[goal_idx].h = 0.0;
 }
 
-void Planner::search() {
+bool Planner::search() {
     cout << "\nRunning Weighted A* search..." << endl;
 
     // Add start state to the open list
@@ -74,11 +74,13 @@ void Planner::search() {
 
     cout << "Total Nodes expanded = " << expansions << endl;
 
-    if (in_closed(goal_idx))
+    if (in_closed(goal_idx)) {
         cout << "Found a plan" << endl;
-    else
-        cout << "No plan found" << endl;
-    return;
+        return true;
+    }
+    
+    cout << "No plan found" << endl;
+    return false;
 }
 
 void Planner::backtrack() {

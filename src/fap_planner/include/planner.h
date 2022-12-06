@@ -51,7 +51,7 @@ private:
 public:
     Planner(Environment env);
 
-    void search();
+    bool search();
 
     void backtrack();
 

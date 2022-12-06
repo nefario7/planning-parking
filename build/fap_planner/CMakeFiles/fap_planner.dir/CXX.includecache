@@ -320,12 +320,6 @@ emmintrin.h
 arm_neon.h
 -
 
-/home/nambags/CMU/planning/project/planning-parking/src/fap_planner/src/dubins.cpp
-math.h
--
-../include/dubins.h
-/home/nambags/CMU/planning/project/planning-parking/src/fap_planner/include/dubins.h
-
 /home/nambags/CMU/planning/project/planning-parking/src/fap_planner/src/environment.cpp
 queue
 -
@@ -349,12 +343,6 @@ cfloat
 /home/nambags/CMU/planning/project/planning-parking/src/fap_planner/include/rapidjson/stringbuffer.h
 ../include/rapidjson/istreamwrapper.h
 /home/nambags/CMU/planning/project/planning-parking/src/fap_planner/include/rapidjson/istreamwrapper.h
-
-/home/nambags/CMU/planning/project/planning-parking/src/fap_planner/src/graph.cpp
-iostream
--
-../include/graph.h
-/home/nambags/CMU/planning/project/planning-parking/src/fap_planner/include/graph.h
 
 /home/nambags/CMU/planning/project/planning-parking/src/fap_planner/src/planner.cpp
 iostream

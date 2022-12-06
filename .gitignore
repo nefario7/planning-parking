@@ -5,3 +5,4 @@
 *.o
 safeparking
 python/__pycache__/
+*.log
