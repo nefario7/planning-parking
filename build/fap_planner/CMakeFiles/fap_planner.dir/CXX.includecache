@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/nambags/CMU/planning/project/safeparking_ws/src/fap_planner/include/dubins.h
+
+/home/nambags/CMU/planning/project/safeparking_ws/src/fap_planner/src/dubins.cpp
+math.h
+-
+../include/dubins.h
+/home/nambags/CMU/planning/project/safeparking_ws/src/fap_planner/include/dubins.h
+

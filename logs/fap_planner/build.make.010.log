@@ -1,0 +1,5 @@
+[ 71%] Built target fap_planner
+[35m[1mScanning dependencies of target main[0m
+[ 85%] [32mBuilding CXX object CMakeFiles/main.dir/main.cpp.o[0m
+[100%] [32m[1mLinking CXX executable /home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/fap_planner/main[0m
+[100%] Built target main
