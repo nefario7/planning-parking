@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/libfap_planner.pdb"
-  "/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/libfap_planner.so"
+  "/home/nambags/CMU/planning/project/planning-parking/devel/.private/fap_planner/lib/libfap_planner.pdb"
+  "/home/nambags/CMU/planning/project/planning-parking/devel/.private/fap_planner/lib/libfap_planner.so"
   "CMakeFiles/fap_planner.dir/src/dubins.cpp.o"
   "CMakeFiles/fap_planner.dir/src/environment.cpp.o"
   "CMakeFiles/fap_planner.dir/src/graph.cpp.o"

@@ -1,8 +1,0 @@
-[ 71%] Built target fap_planner
-[35m[1mScanning dependencies of target main[0m
-[ 85%] [32m[1mLinking CXX executable /home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/fap_planner/main[0m
-/usr/bin/ld: /home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/libfap_planner.so: undefined reference to `dubins_shortest_path(DubinsPath*, double*, double*, double)'
-collect2: error: ld returned 1 exit status
-make[2]: *** [CMakeFiles/main.dir/build.make:102: /home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/fap_planner/main] Error 1
-make[1]: *** [CMakeFiles/Makefile2:432: CMakeFiles/main.dir/all] Error 2
-make: *** [Makefile:141: all] Error 2

@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/fap_planner/main"
-  "/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/fap_planner/main.pdb"
+  "/home/nambags/CMU/planning/project/planning-parking/devel/.private/fap_planner/lib/fap_planner/main"
+  "/home/nambags/CMU/planning/project/planning-parking/devel/.private/fap_planner/lib/fap_planner/main.pdb"
   "CMakeFiles/main.dir/main.cpp.o"
 )
 

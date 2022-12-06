@@ -67,14 +67,14 @@ set(fap_planner_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(fap_planner_SOURCE_PREFIX /home/nambags/CMU/planning/project/safeparking_ws/src/fap_planner)
-  set(fap_planner_DEVEL_PREFIX /home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner)
+  set(fap_planner_SOURCE_PREFIX /home/nambags/CMU/planning/project/planning-parking/src/fap_planner)
+  set(fap_planner_DEVEL_PREFIX /home/nambags/CMU/planning/project/planning-parking/devel/.private/fap_planner)
   set(fap_planner_INSTALL_PREFIX "")
   set(fap_planner_PREFIX ${fap_planner_DEVEL_PREFIX})
 else()
   set(fap_planner_SOURCE_PREFIX "")
   set(fap_planner_DEVEL_PREFIX "")
-  set(fap_planner_INSTALL_PREFIX /home/nambags/CMU/planning/project/safeparking_ws/install)
+  set(fap_planner_INSTALL_PREFIX /home/nambags/CMU/planning/project/planning-parking/install)
   set(fap_planner_PREFIX ${fap_planner_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/nambags/CMU/planning/project/safeparking_ws/install/lib;/home/nambags/CMU/planning/project/safeparking_ws/devel/lib;/home/nambags/CMU/planning/project/catkin_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/nambags/CMU/planning/project/planning-parking/install/lib;/home/nambags/CMU/planning/project/catkin_ws/devel/lib;/home/nambags/CMU/planning/project/planning-parking/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

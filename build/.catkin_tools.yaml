@@ -1,6 +1,6 @@
-devel_space: /home/nambags/CMU/planning/project/safeparking_ws/devel
+devel_space: /home/nambags/CMU/planning/project/planning-parking/devel
 install: false
-install_space: /home/nambags/CMU/planning/project/safeparking_ws/install
+install_space: /home/nambags/CMU/planning/project/planning-parking/install
 profile: default
-source_space: /home/nambags/CMU/planning/project/safeparking_ws/src
-workspace: /home/nambags/CMU/planning/project/safeparking_ws
+source_space: /home/nambags/CMU/planning/project/planning-parking/src
+workspace: /home/nambags/CMU/planning/project/planning-parking

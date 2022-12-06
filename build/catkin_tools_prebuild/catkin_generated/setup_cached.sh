@@ -7,9 +7,9 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH='/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/catkin_tools_prebuild:/home/nambags/CMU/planning/project/catkin_ws/devel:/opt/ros/noetic'
+export CMAKE_PREFIX_PATH="/home/nambags/CMU/planning/project/planning-parking/devel/.private/catkin_tools_prebuild:$CMAKE_PREFIX_PATH"
 export LD_LIBRARY_PATH='/home/nambags/CMU/planning/project/catkin_ws/devel/lib:/opt/ros/noetic/lib'
 export PKG_CONFIG_PATH='/opt/ros/noetic/lib/pkgconfig'
-export PWD='/home/nambags/CMU/planning/project/safeparking_ws/build/catkin_tools_prebuild'
-export ROSLISP_PACKAGE_DIRECTORIES='/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/catkin_tools_prebuild/share/common-lisp:/home/nambags/CMU/planning/project/catkin_ws/devel/share/common-lisp'
-export ROS_PACKAGE_PATH='/home/nambags/CMU/planning/project/safeparking_ws/build/catkin_tools_prebuild:/home/nambags/CMU/planning/project/catkin_ws/src:/opt/ros/noetic/share'
+export PWD='/home/nambags/CMU/planning/project/planning-parking/build/catkin_tools_prebuild'
+export ROSLISP_PACKAGE_DIRECTORIES="/home/nambags/CMU/planning/project/planning-parking/devel/.private/catkin_tools_prebuild/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROS_PACKAGE_PATH="/home/nambags/CMU/planning/project/planning-parking/build/catkin_tools_prebuild:$ROS_PACKAGE_PATH"

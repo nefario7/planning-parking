@@ -1,4 +1,4 @@
-prefix=/home/nambags/CMU/planning/project/safeparking_ws/install
+prefix=/home/nambags/CMU/planning/project/planning-parking/install
 
 Name: fap_planner
 Description: Description of fap_planner

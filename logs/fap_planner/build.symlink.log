@@ -1,5 +1,5 @@
-Linked: (/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/libfap_planner.so, /home/nambags/CMU/planning/project/safeparking_ws/devel/lib/libfap_planner.so)
-Linked: (/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/pkgconfig/fap_planner.pc, /home/nambags/CMU/planning/project/safeparking_ws/devel/lib/pkgconfig/fap_planner.pc)
-Linked: (/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/lib/fap_planner/main, /home/nambags/CMU/planning/project/safeparking_ws/devel/lib/fap_planner/main)
-Linked: (/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/share/fap_planner/cmake/fap_plannerConfig-version.cmake, /home/nambags/CMU/planning/project/safeparking_ws/devel/share/fap_planner/cmake/fap_plannerConfig-version.cmake)
-Linked: (/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/fap_planner/share/fap_planner/cmake/fap_plannerConfig.cmake, /home/nambags/CMU/planning/project/safeparking_ws/devel/share/fap_planner/cmake/fap_plannerConfig.cmake)
+Symlinking /home/nambags/CMU/planning/project/planning-parking/devel/lib/libfap_planner.so
+Symlinking /home/nambags/CMU/planning/project/planning-parking/devel/lib/pkgconfig/fap_planner.pc
+Symlinking /home/nambags/CMU/planning/project/planning-parking/devel/lib/fap_planner/main
+Symlinking /home/nambags/CMU/planning/project/planning-parking/devel/share/fap_planner/cmake/fap_plannerConfig-version.cmake
+Symlinking /home/nambags/CMU/planning/project/planning-parking/devel/share/fap_planner/cmake/fap_plannerConfig.cmake

@@ -1,4 +1,4 @@
-prefix=/home/nambags/CMU/planning/project/safeparking_ws/devel/.private/catkin_tools_prebuild
+prefix=/home/nambags/CMU/planning/project/planning-parking/devel/.private/catkin_tools_prebuild
 
 Name: catkin_tools_prebuild
 Description: Description of catkin_tools_prebuild

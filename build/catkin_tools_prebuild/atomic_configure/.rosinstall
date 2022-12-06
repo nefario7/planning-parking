@@ -1,2 +1,2 @@
 - setup-file:
-    local-name: /home/nambags/CMU/planning/project/safeparking_ws/devel/.private/catkin_tools_prebuild/setup.sh
+    local-name: /home/nambags/CMU/planning/project/planning-parking/devel/.private/catkin_tools_prebuild/setup.sh

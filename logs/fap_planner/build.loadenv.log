@@ -1,15 +1,1 @@
-Loading environment from: /home/nambags/CMU/planning/project/safeparking_ws/devel/env.sh
-Traceback (most recent call last):
-  File "/usr/lib/python3/dist-packages/catkin_tools/execution/stages.py", line 177, in function_proxy
-    return function(logger, event_queue, *args, **kwargs)
-  File "/usr/lib/python3/dist-packages/catkin_tools/jobs/utils.py", line 113, in loadenv
-    envs.append(get_resultspace_environment(
-  File "/usr/lib/python3/dist-packages/catkin_tools/resultspace.py", line 130, in get_resultspace_environment
-    lines = subprocess.check_output(command, cwd=os.getcwd(), env=base_env, shell=True)
-  File "/usr/lib/python3.8/subprocess.py", line 415, in check_output
-    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
-  File "/usr/lib/python3.8/subprocess.py", line 516, in run
-    raise CalledProcessError(retcode, process.args,
-subprocess.CalledProcessError: Command '/home/nambags/CMU/planning/project/safeparking_ws/devel/env.sh /bin/bash -c "env --null"' died with <Signals.SIGINT: 2>.
-
-Stage `loadenv` failed with arguments:
+Loading environment from: /home/nambags/CMU/planning/project/planning-parking/devel/env.sh
