@@ -1,7 +1,8 @@
 import imageio
 from sacred import Experiment
 from sacred.observers import MongoObserver
-from python_traversability.load_and_segment import load_segment_and_filter
+# from python_traversability.load_segment_and_filter 
+import load_and_segment
 from python_traversability.grid_cloud import grid_cloud
 from python_traversability.vis import show_labeled_cloud
 from python_traversability.compute_traversability import compute_traversability
