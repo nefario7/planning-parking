@@ -80,6 +80,7 @@ int main(int argc, char** argv) {
             m.create_primitives(PRIMITIVES_JSON);
             if(!m.check_start_goal()) {
                 r.sleep();
+                continue;
             }
 
             cout << "----------- Planner -----------" << endl;
