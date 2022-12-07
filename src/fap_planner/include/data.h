@@ -13,10 +13,7 @@
 #define GETYFROM2DINDEX(IDX, XSIZE) int(IDX / XSIZE)
 
 #define NUMOFDIRS 8
-#define NUMOFPRIMS 7
-
-#define HEURISTIC_METHOD "combined" // "euclidean", "dubins", "dijkstra", "combined"
-#define WEIGHT 1.0
+#define NUMOFPRIMS 10 // 10 for backward primitives
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 CXX := g++
 objects := planner.o environment.o graph.o dubins.o
 
-all: clean main
+all: main
 
 main: main.o $(objects)
 	$(CXX) -o main main.o $(objects) -o safeparking
@@ -15,8 +15,8 @@ environment.o: src/environment.cpp include/environment.h
 graph.o: src/graph.cpp include/graph.h
 	$(CXX) -c src/graph.cpp
 
-dubins.o: src/dubins.c include/dubins.h
-	$(CXX) -c src/dubins.c
+dubins.o: src/dubins.cpp include/dubins.h
+	$(CXX) -c src/dubins.cpp
 
 main.o: main.cpp 
 	$(CXX) -c main.cpp

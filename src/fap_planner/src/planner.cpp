@@ -13,8 +13,18 @@
 using namespace std;
 
 // Public methods
-Planner::Planner(Environment env) {
+Planner::Planner(Environment env, float weight, string heuristic_method, bool parking_search = false) {
     this->env = env;
+    this->weight = weight;
+    this->heuristic_method = heuristic_method;
+
+    // Initialize parking data
+    this->parking_search = parking_search;  // default is false when doing normal planning
+    this->parking_time_limit = 0; // Time limit, distance weight, parking cost weight
+    this->parking_parameters = vector<float>();
+    this->safe_parking_points = vector<Point>();
+    this->safest_parking_cost = -1;
+    this->safest_parking_idx = -1;
 
     // Get start and goal from the environment
     this->start_point = env.start_point;
@@ -29,7 +39,7 @@ Planner::Planner(Environment env) {
     // Add start state to the graph
     graph.add_node(start_idx, start_point);
     graph.nodes_map[start_idx].g = 0.0;
-    graph.nodes_map[start_idx].h = get_heuristic(start_point, HEURISTIC_METHOD);
+    graph.nodes_map[start_idx].h = get_heuristic(start_point, this->heuristic_method);
 
     // Add goal state to the graph
     graph.add_node(goal_idx, goal_point);
@@ -37,14 +47,49 @@ Planner::Planner(Environment env) {
     graph.nodes_map[goal_idx].h = 0.0;
 }
 
+Planner::Planner(Environment env, vector<float> parking_parameters, int parking_time_limit, bool parking_search = true) {
+    this->env = env;
+    this->weight = 0.0;
+    this->heuristic_method = "none";
+
+    // Initialize parking data
+    this->parking_search = parking_search;  // default is false when doing normal planning
+    this->parking_time_limit = parking_time_limit; // Time limit, distance weight, parking cost weight
+    this->parking_parameters = parking_parameters;
+    this->safe_parking_points = vector<Point>();
+    this->safest_parking_cost = FLT_MAX;
+    this->safest_parking_idx = -1;
+
+    //! Get the current position of the robot for the parkign search
+    this->start_point = env.start_point;
+
+    //! Get start and goal idx
+    this->start_idx = get_index(start_point);
+
+    // Add start state to the graph
+    graph.add_node(start_idx, start_point);
+    graph.nodes_map[start_idx].g = 0.0;
+    graph.nodes_map[start_idx].h = get_heuristic(start_point, this->heuristic_method);
+}
+
 bool Planner::search() {
     cout << "\nRunning Weighted A* search..." << endl;
 
     // Add start state to the open list
-    open.push(make_pair(graph.nodes_map[start_idx].get_f(), start_idx));
+    open.push(make_pair(graph.nodes_map[start_idx].get_f(this->weight), start_idx));
 
     int expansions = 0;
-    while (!open.empty() && !in_closed(goal_idx)) {
+    while (!open.empty()) {
+        if (!parking_search && in_closed(goal_idx)) {
+            cout << "Goal reached!" << endl;
+            break;
+        }
+
+        if (parking_search && expansions > parking_time_limit) {
+            cout << "Parking search reached time limit!" << endl;
+            break;
+        }
+
         // Get the index of the node with the lowest f score
         double curr_f = open.top().first;
         int curr_idx = open.top().second;
@@ -53,11 +98,11 @@ bool Planner::search() {
         // Get the node with the lowest f score
         Node curr_node = graph.nodes_map[curr_idx];
 
-        Point p = get_xytheta(curr_idx);
-        if (goal_reached(p, 0, 0, 0)) {
-            cout << "I have reached the goal!" << endl;
-            goal_idx = curr_idx;
-        }
+        // Point p = get_xytheta(curr_idx);
+        // if (goal_reached(p, 0, 0, 0)) {
+        //     cout << "I have reached the goal!" << endl;
+        //     goal_idx = curr_idx;
+        // }
 
         // Add the node to the closed list if not already there
         if (in_closed(curr_idx))
@@ -74,11 +119,28 @@ bool Planner::search() {
 
     cout << "Total Nodes expanded = " << expansions << endl;
 
+    if (parking_search) {
+        if (safe_parking_points.size() != 0) {
+            this->goal_idx = safest_parking_idx;
+
+            cout << "Parking search finished!" << endl;
+            cout << "Safest parking cost: " << safest_parking_cost << endl;
+            cout << "Safest parking idx: " << safest_parking_idx << endl;
+            cout << "Safe parking points: " << safe_parking_points.size() << endl;
+            return true;
+        }
+        else {
+            cout << "Parking search finished unsuccessfully!" << endl;
+            cout << "No safe parking points found!" << endl;
+            return false;
+        }
+    }
+
     if (in_closed(goal_idx)) {
         cout << "Found a plan" << endl;
         return true;
     }
-    
+
     cout << "No plan found" << endl;
     return false;
 }
@@ -118,7 +180,7 @@ void Planner::get_robot_points(vector<Point>& grid_points, vector<Point>& robot_
             // p_prim.x /= 0.2;
             // p_prim.y /= 0.2;
             // p_prim.theta /= 0.2;
-            p_prim.x += (p.x + min_x )* 0.2;
+            p_prim.x += (p.x + min_x) * 0.2;
             p_prim.y += (p.y + min_y) * 0.2;
             p_prim.theta *= 180 / M_PI;
             robot_points.push_back(p_prim);
@@ -201,7 +263,7 @@ void Planner::expand_node(const int& idx) {
 
     // Get the primitives for the current angle
     double theta_temp = (int)(curr_point.theta * 100 + .5);
-    theta_temp = (double) theta_temp / 100;
+    theta_temp = (double)theta_temp / 100;
 
     if (env.primitives_map.find(theta_temp) == env.primitives_map.end()) {
         printf("Angle does not exist in primitives \n");
@@ -233,7 +295,7 @@ void Planner::expand_node(const int& idx) {
 
             if (graph.nodes_map[new_idx].g > graph.nodes_map[idx].g + primitive.cost) {
                 graph.nodes_map[new_idx].g = graph.nodes_map[idx].g + primitive.cost;
-                graph.nodes_map[new_idx].h = get_heuristic(new_point, HEURISTIC_METHOD);
+                graph.nodes_map[new_idx].h = get_heuristic(new_point, this->heuristic_method);
                 graph.nodes_map[new_idx].parent_idx = idx;
                 if (idx < 0) {
                     cout << "Parent Index = " << idx << endl;
@@ -244,7 +306,21 @@ void Planner::expand_node(const int& idx) {
                     cout << "WARNING: Primitive is < 0 : " << primitive.idx << endl;
                 }
 
-                open.push(make_pair(graph.nodes_map[new_idx].get_f(), new_idx));
+                open.push(make_pair(graph.nodes_map[new_idx].get_f(this->weight), new_idx));
+            }
+
+            if (parking_search) {
+                double parking_cost = graph.nodes_map[new_idx].g + env.parking_costmap[new_point.x][new_point.y];
+                if (parking_cost < safest_parking_cost) {
+                    cout << "Found a better parking spot! " << endl;
+                    safest_parking_cost = parking_cost;
+                    safest_parking_idx = new_idx;
+                    safe_parking_points.clear();
+                    safe_parking_points.push_back(new_point);
+                }
+                else if (parking_cost == safest_parking_cost) {
+                    safe_parking_points.push_back(new_point);
+                }
             }
         }
     }

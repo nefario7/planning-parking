@@ -12,8 +12,8 @@ Node::Node(Point p, double g, double h, int parent_idx, int primitive_idx) {
     this->primitive_idx = primitive_idx;
 }
 
-double Node::get_f() const {
-    return this->g + WEIGHT * this->h;
+double Node::get_f(const float& weight) const {
+    return this->g + weight * this->h;
 }
 
 // Add a node to the graph

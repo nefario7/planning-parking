@@ -18,6 +18,18 @@ private:
     Graph graph;
     Environment env;
 
+    float weight;
+    string heuristic_method;
+
+    // Parking data
+    bool parking_search;
+    int parking_time_limit;
+    vector<float> parking_parameters;
+    vector<Point> safe_parking_points;
+    priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> safe_parking_points_g;
+    double safest_parking_cost;
+    int safest_parking_idx;
+
     // Start and goal points
     int start_idx, goal_idx;
     Point start_point, goal_point;
@@ -49,7 +61,9 @@ private:
     bool is_valid_cell(int a, int b) const;
 
 public:
-    Planner(Environment env);
+    Planner(Environment env, float weight, string heuristic_method, bool parking_search);
+
+    Planner(Environment env, vector<float> parking_parameters, int parking_time_limit, bool parking_search);
 
     bool search();
 

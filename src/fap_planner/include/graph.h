@@ -19,7 +19,7 @@ struct Node {
     Node() {};
     Node(Point p, double g, double h, int parent_idx, int primitive_idx);
 
-    double get_f() const;
+    double get_f(const float& weight) const;
 };
 
 struct Graph {

@@ -13,8 +13,13 @@ using namespace std;
 
 class Environment {
 public:
+    // Obstacle Map data
+    vector<std::vector<int>>map;
+
+    // Parking map data
+    vector<vector<double>>parking_costmap;
+
     // Map data
-    std::vector<std::vector<int>>map;
     int size_x;
     int size_y;
     int size_theta;
@@ -33,7 +38,11 @@ public:
 
     Environment(Point start, Point goal, float disc_theta);
 
-    void create_map(std::string filename);
+    void create_map(const string filename);
+
+    void create_parking_costmap(const string filename);
+
+    void create_primitives(const string filename);
 
     bool is_obstacle(const int& a, const int& b) const;
 
@@ -44,8 +53,6 @@ public:
     double get_cost(const int& idx) const;
 
     void compute_dijkstra_costmap();
-
-    void create_primitives(std::string filename);
 
     bool check_start_goal();
 
