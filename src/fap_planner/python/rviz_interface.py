@@ -18,8 +18,10 @@ class rviz_interface():
         self.odometry_sub = rospy.Subscriber("/rc1/integrated_to_init", Odometry, self.odometryCallback)
         self.waypoint_sub = rospy.Subscriber("/basestation/rviz/waypoints", Path, self.wayPointCB)
         self.planner_flag = rospy.Subscriber("/fap_planner", Bool, self.plannerFlagCB)
+        self.park_flag = rospy.Subscriber("/park_planner", Bool, self.parkFlagCB)
 
         self.vector_pub = rospy.Publisher("/vector", PoseArray, queue_size=1)
+        self.park_pub = rospy.Publisher("/park_start", Pose, queue_size=1)
         self.start_goal = PoseArray()
         self.odom = Odometry()
         self.flag = False
@@ -76,6 +78,22 @@ class rviz_interface():
         self.flag = True
         self.got_waypoint = False
     
+    def parkFlagCB(self, msg):
+        if msg.data:
+            x0 = (int)((self.odom.pose.pose.position.x + OFFSET_X) * 5)
+            y0 = (int)((self.odom.pose.pose.position.y + OFFSET_Y) * 5)
+            orientation_q = self.odom.pose.pose.orientation
+            orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
+            (_, _, yaw) = euler_from_quaternion (orientation_list)
+            yaw = np.floor(yaw / (np.pi/8))
+            yaw = self.wrap_to_360(np.rad2deg(yaw * (np.pi/8)))
+            park_start = Pose()
+            park_start.position.x = x0
+            park_start.position.y = y0
+            park_start.position.z = yaw
+            self.park_pub.publish(park_start)
+            rospy.loginfo("Received start input: %f, %f, %f", x0, y0, yaw)
+
     def wrap_to_360(self, angle):
         while angle >= 360:
             angle -= 360

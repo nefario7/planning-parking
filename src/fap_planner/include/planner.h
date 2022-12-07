@@ -63,7 +63,7 @@ private:
 public:
     Planner(Environment env, float weight, string heuristic_method, bool parking_search);
 
-    Planner(Environment env, vector<float> parking_parameters, int parking_time_limit, bool parking_search);
+    Planner(Environment env, Point park_start_point, vector<float> parking_parameters, int parking_time_limit, bool parking_search);
 
     bool search();
 

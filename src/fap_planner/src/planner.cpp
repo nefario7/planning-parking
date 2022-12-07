@@ -47,7 +47,7 @@ Planner::Planner(Environment env, float weight, string heuristic_method, bool pa
     graph.nodes_map[goal_idx].h = 0.0;
 }
 
-Planner::Planner(Environment env, vector<float> parking_parameters, int parking_time_limit, bool parking_search = true) {
+Planner::Planner(Environment env, Point park_start_point, vector<float> parking_parameters, int parking_time_limit, bool parking_search = true) {
     this->env = env;
     this->weight = 0.0;
     this->heuristic_method = "none";
@@ -61,15 +61,15 @@ Planner::Planner(Environment env, vector<float> parking_parameters, int parking_
     this->safest_parking_idx = -1;
 
     //! Get the current position of the robot for the parkign search
-    this->start_point = env.start_point;
+    this->start_point = park_start_point;
 
     //! Get start and goal idx
-    this->start_idx = get_index(start_point);
+    this->start_idx = get_index(park_start_point);
 
     // Add start state to the graph
-    graph.add_node(start_idx, start_point);
+    graph.add_node(start_idx, park_start_point);
     graph.nodes_map[start_idx].g = 0.0;
-    graph.nodes_map[start_idx].h = get_heuristic(start_point, this->heuristic_method);
+    graph.nodes_map[start_idx].h = get_heuristic(park_start_point, this->heuristic_method);
 }
 
 bool Planner::search() {

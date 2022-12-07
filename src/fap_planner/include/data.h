@@ -13,7 +13,7 @@
 #define GETYFROM2DINDEX(IDX, XSIZE) int(IDX / XSIZE)
 
 #define NUMOFDIRS 8
-#define NUMOFPRIMS 10 // 10 for backward primitives
+#define NUMOFPRIMS 7 // 10 for backward primitives
 
 using namespace std;
 
